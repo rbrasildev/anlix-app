@@ -29,7 +29,7 @@ export default function Apply() {
     const getDataSgp = async () => {
         try {
             setIsLoading(true);
-            const response = await fetch(`${API_SGP_URL}api/api.php?login=${pppoe}`).then((response) => response.json())
+            const response = await fetch(`${API_SGP_URL}/api/api.php?login=${pppoe}`).then((response) => response.json())
             console.log(response)
 
             if (pppoe === "") {

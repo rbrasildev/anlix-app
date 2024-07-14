@@ -30,7 +30,7 @@ export default function Device() {
     const handleResetDefault = async () => {
         setIsLoading(true);
         try {
-            const response = await fetch(`${API_URL}api/v2/device/get/`, {
+            const response = await fetch(`${API_URL}/api/v2/device/get`, {
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/json',

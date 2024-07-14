@@ -23,6 +23,44 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="apply"
+        options={{
+          title: 'Aplicar',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'wifi' : 'wifi-outline'} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="Scanner"
+        options={{
+          title: 'Buscar',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'search' : 'search-outline'} color={color} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="cto"
+        options={{
+          title: 'CTO',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'square-sharp' : 'square-outline'} color={color} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="Settings"
+        options={{
+          title: 'Configurações',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'settings-sharp' : 'settings-outline'} color={color} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }

@@ -54,7 +54,7 @@ export default function Cliente<WifiProps>() {
 
     const callGetMac = async () => {
         try {
-            const response = await fetch(`${API_URL}api/v2/device/update/${macAddress}`,
+            const response = await fetch(`${API_URL}/api/v2/device/update/${macAddress}`,
                 {
                     method: 'GET',
                     headers: {
@@ -76,7 +76,6 @@ export default function Cliente<WifiProps>() {
                     "Atenção",
                     `${response.message}, verifique se o roteador está ligado`,
                 )
-
                 return;
             }
             router.push({
@@ -102,7 +101,7 @@ export default function Cliente<WifiProps>() {
 
     const callGetApi = async () => {
         try {
-            const response = await fetch(`${API_SGP_URL}api/api.php?login=${cpf}`).then((response) => response.json())
+            const response = await fetch(`${API_SGP_URL}/api/api.php?login=${cpf}`).then((response) => response.json())
 
             setDataUserSgp(response)
             setWifi_ssid(response.wifi_ssid)
@@ -117,7 +116,7 @@ export default function Cliente<WifiProps>() {
 
     }
     useEffect(() => {
-        callGetApi();
+        callGetApi()
     }, []);
 
 
