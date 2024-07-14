@@ -1,8 +1,11 @@
 import { Alert, Linking, StyleSheet, Text, useColorScheme, View } from 'react-native'
 import React, { useState } from "react";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Image, TextInput, TouchableOpacity, KeyboardAvoidingView } from "react-native";
+import { TextInput, TouchableOpacity, KeyboardAvoidingView } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
+
 
 
 
@@ -12,6 +15,12 @@ interface DashProps {
 
 
 const HomeScreen = () => {
+
+  const [url, setUrl] = useState('');
+  const [login, setLogin] = useState('');
+  const [senha, setSenha] = useState('');
+
+  const router = useRouter();
   const [phoneNumber, setPhoneNumber] = useState();
   const scheme = useColorScheme();
 
@@ -27,6 +36,29 @@ const HomeScreen = () => {
       })
       .catch((err) => console.error('An error occurred', err));
   };
+
+
+  const getCredentials = async () => {
+    try {
+      const storedUrl = await AsyncStorage.getItem('url');
+      const storedLogin = await AsyncStorage.getItem('login');
+      const storedSenha = await AsyncStorage.getItem('senha');
+      if (storedUrl !== null && storedLogin !== null && storedSenha !== null) {
+        setUrl(storedUrl);
+        setLogin(storedLogin);
+        setSenha(storedSenha);
+      } else {
+        router.push('Settings')
+      }
+    } catch (error) {
+      Alert.alert('Erro ao recuperar credenciais');
+    }
+  };
+
+  React.useEffect(() => {
+    getCredentials();
+  }, []);
+
 
 
   const lightTheme = {
@@ -46,10 +78,6 @@ const HomeScreen = () => {
   return (
     <SafeAreaView style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center', paddingHorizontal: 15 }}>
       <KeyboardAvoidingView behavior='position'>
-        {/* <Image
-          source={require('@/assets/images/logo.png')}
-          style={{ width: 155, height: 60, marginBottom: 10 }}
-        /> */}
         <View style={{ ...theme }}>
           <TextInput
             style={{

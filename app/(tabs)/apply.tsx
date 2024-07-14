@@ -3,14 +3,35 @@ import { View, Text, Alert, TextInput, TouchableOpacity, KeyboardAvoidingView, A
 import { useRouter } from 'expo-router';
 import { StyleSheet } from "react-native";
 import { API_URL, API_USER, API_PASSWORD, API_SGP_URL } from '@env';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 export default function Apply() {
     const [pppoe, setPppoe] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [url, setUrl] = useState('');
+    const [login, setLogin] = useState('');
+    const [senha, setSenha] = useState('');
 
     const router = useRouter()
     const scheme = useColorScheme();
+
+    const getCredentials = async () => {
+        try {
+            const storedUrl = await AsyncStorage.getItem('url');
+            const storedLogin = await AsyncStorage.getItem('login');
+            const storedSenha = await AsyncStorage.getItem('senha');
+            if (storedUrl !== null && storedLogin !== null && storedSenha !== null) {
+                setUrl(storedUrl);
+                setLogin(storedLogin);
+                setSenha(storedSenha);
+            } else {
+                router.push('Settings')
+            }
+        } catch (error) {
+            Alert.alert('Erro ao recuperar credenciais');
+        }
+    };
 
     const lightTheme = {
         backgroundColor: '#fff',

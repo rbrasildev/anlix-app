@@ -164,7 +164,7 @@ export default function Roteador() {
                 </View>
 
                 <View style={{ ...theme, padding: 10, borderRadius: 10 }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap:3 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
                         <TabBarIcon name='wifi' size={20} style={{ ...theme }} />
                         <Text style={{ ...theme, fontSize: 20, fontWeight: 'bold' }}>SSID</Text>
                     </View>
@@ -191,7 +191,7 @@ export default function Roteador() {
                 <TouchableOpacity style={styles.button}
                     onPress={callPostApi}
                 >
-                    <Text style={{ fontSize: 20, fontWeight:'500' }}>Aplicar</Text>
+                    <Text style={{ fontSize: 20, fontWeight: '500' }}>Aplicar</Text>
                 </TouchableOpacity>
             </View>
 

@@ -56,7 +56,7 @@ export default function Cliente<WifiProps>() {
         try {
             const response = await fetch(`${API_URL}/api/v2/device/update/${macAddress}`,
                 {
-                    method: 'GET',
+                    method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': 'Basic ' + btoa(API_USER + ':' + API_PASSWORD)
