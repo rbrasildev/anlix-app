@@ -3,7 +3,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from "react";
 import { Alert } from "react-native";
 import { useRouter } from "expo-router";
-import { API_SGP_URL } from '@env'
+import { auth } from "@/constants/Auth";
 
 export default function App() {
 
@@ -11,7 +11,6 @@ export default function App() {
     const router = useRouter();
 
     const scheme = useColorScheme();
-
     const lightTheme = {
         backgroundColor: '#fff',
         textColor: '#000',
@@ -26,7 +25,7 @@ export default function App() {
     const theme = scheme === 'light' ? lightTheme : darkTheme;
 
     async function navigateToCto() {
-        const data = await fetch(`${API_SGP_URL}/api/api.php?cto=${ctoIdent}`).then((response) => response.json())
+        const data = await fetch(`${auth.url_sgp}/api/api.php?cto=${ctoIdent}`).then((response) => response.json())
         if (ctoIdent == '') {
             Alert.alert(
                 "Atenção",

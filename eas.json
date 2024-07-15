@@ -5,12 +5,25 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "API_URL": "https://flashtins.redeconexaonet.com",
+        "API_USER": "admin",
+        "API_PASSWORD": "bld2154038",
+        "API_SGP_URL": "https://sgpos.redeconexaonet.com"
+      }
     },
     "preview": {
       "distribution": "internal"
     },
-    "production": {}
+    "production": {
+      "env": {
+        "API_URL": "https://flashtins.redeconexaonet.com",
+        "API_USER": "admin",
+        "API_PASSWORD": "bld2154038",
+        "API_SGP_URL": "https://sgpos.redeconexaonet.com"
+      }
+    }
   },
   "submit": {
     "production": {}

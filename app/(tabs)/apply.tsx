@@ -2,36 +2,15 @@ import React, { useState } from "react";
 import { View, Text, Alert, TextInput, TouchableOpacity, KeyboardAvoidingView, ActivityIndicator, useColorScheme } from "react-native";
 import { useRouter } from 'expo-router';
 import { StyleSheet } from "react-native";
-import { API_URL, API_USER, API_PASSWORD, API_SGP_URL } from '@env';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { auth } from "@/constants/Auth";
 
 
 export default function Apply() {
     const [pppoe, setPppoe] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const [url, setUrl] = useState('');
-    const [login, setLogin] = useState('');
-    const [senha, setSenha] = useState('');
 
     const router = useRouter()
     const scheme = useColorScheme();
-
-    const getCredentials = async () => {
-        try {
-            const storedUrl = await AsyncStorage.getItem('url');
-            const storedLogin = await AsyncStorage.getItem('login');
-            const storedSenha = await AsyncStorage.getItem('senha');
-            if (storedUrl !== null && storedLogin !== null && storedSenha !== null) {
-                setUrl(storedUrl);
-                setLogin(storedLogin);
-                setSenha(storedSenha);
-            } else {
-                router.push('Settings')
-            }
-        } catch (error) {
-            Alert.alert('Erro ao recuperar credenciais');
-        }
-    };
 
     const lightTheme = {
         backgroundColor: '#fff',
@@ -50,7 +29,7 @@ export default function Apply() {
     const getDataSgp = async () => {
         try {
             setIsLoading(true);
-            const response = await fetch(`${API_SGP_URL}/api/api.php?login=${pppoe}`).then((response) => response.json())
+            const response = await fetch(`${auth.url_sgp}/api/api.php?login=${pppoe}`).then((response) => response.json())
             console.log(response)
 
             if (pppoe === "") {

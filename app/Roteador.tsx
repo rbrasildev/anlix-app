@@ -4,7 +4,7 @@ import { useGlobalSearchParams } from 'expo-router';
 import { StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text, Alert, View, TouchableOpacity, ActivityIndicator, useColorScheme } from 'react-native';
-import { API_URL, API_USER, API_PASSWORD } from '@env'
+import { auth } from '@/constants/Auth';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 
 interface RoteadorProps {
@@ -46,12 +46,12 @@ export default function Roteador() {
 
     const callGetApi = async () => {
         try {
-            const response = await fetch(`${API_URL}/api/v2/device/update/${params.mac}`,
+            const response = await fetch(`${auth.url_anlix}/api/v2/device/update/${params.mac}`,
                 {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': 'Basic ' + btoa(API_USER + ':' + API_PASSWORD)
+                        'Authorization': 'Basic ' + btoa(auth.username + ':' + auth.password)
                     }
                 }
             ).then((response) => response.json())
@@ -74,11 +74,11 @@ export default function Roteador() {
 
     //criar wifi
     const callPostApi = async () => {
-        const response = await fetch(`${API_URL}/api/v2/device/update/${params.mac}`, {
+        const response = await fetch(`${auth.url_anlix}/api/v2/device/update/${params.mac}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Basic ' + btoa(API_USER + ':' + API_PASSWORD)
+                'Authorization': 'Basic ' + btoa(auth.username + ':' + auth.password)
             },
             body: JSON.stringify(
                 {

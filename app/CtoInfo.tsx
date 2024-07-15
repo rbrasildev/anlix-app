@@ -3,7 +3,7 @@ import { View, Text, FlatList, RefreshControl, useColorScheme } from "react-nati
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StatusOnline } from "./StatusOnline";
 import { useGlobalSearchParams } from "expo-router";
-import { API_SGP_URL } from "@env"
+import { auth } from "@/constants/Auth";
 
 export default function Cto() {
     const [data, setData] = useState()
@@ -37,7 +37,7 @@ export default function Cto() {
     };
 
     const handleCto = async () => {
-        const data = await fetch(`${API_SGP_URL}/api/api.php?cto=${ctoIdent}`).then((response) => response.json())
+        const data = await fetch(`${auth.url_sgp}/api/api.php?cto=${ctoIdent}`).then((response) => response.json())
         setData(data)
         setTotalClientes(data.length)
     }

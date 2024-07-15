@@ -1,7 +1,7 @@
 import React from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react'
-import { API_SGP_URL } from "@env"
+import { auth } from '@/constants/Auth';
 
 interface StatusConnectionProps {
     isOnline: boolean;
@@ -10,7 +10,7 @@ interface StatusConnectionProps {
 export function StatusOnline({ isOnline }: StatusConnectionProps) {
     const [isOn, setIsOn] = useState(false)
     async function handleStatusConnection() {
-        const on = await fetch(`${API_SGP_URL}/api/api.php?online=${isOnline}`).then((response) => response.json())
+        const on = await fetch(`${auth.url_sgp}/api/api.php?online=${isOnline}`).then((response) => response.json())
         setIsOn(on);
     }
     useEffect(() => {

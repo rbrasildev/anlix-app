@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Alert, Clipboard, StyleSheet, useColorScheme } from 'react-native';
 import { useGlobalSearchParams, useRouter } from "expo-router";
-import { API_URL, API_USER, API_PASSWORD, API_SGP_URL } from '@env';
+import { auth } from '@/constants/Auth';
 
 interface WifiProps {
     wifi_ssid: string;
@@ -54,12 +54,12 @@ export default function Cliente<WifiProps>() {
 
     const callGetMac = async () => {
         try {
-            const response = await fetch(`${API_URL}/api/v2/device/update/${macAddress}`,
+            const response = await fetch(`${auth.url_anlix}/api/v2/device/update/${macAddress}`,
                 {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': 'Basic ' + btoa(API_USER + ':' + API_PASSWORD)
+                        'Authorization': 'Basic ' + btoa(auth.username + ':' + auth.password)
                     }
                 }
             ).then((response) => response.json())
@@ -101,7 +101,7 @@ export default function Cliente<WifiProps>() {
 
     const callGetApi = async () => {
         try {
-            const response = await fetch(`${API_SGP_URL}/api/api.php?login=${cpf}`).then((response) => response.json())
+            const response = await fetch(`${auth.url_sgp}/api/api.php?login=${cpf}`).then((response) => response.json())
 
             setDataUserSgp(response)
             setWifi_ssid(response.wifi_ssid)

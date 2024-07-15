@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text, View, TouchableOpacity, ActivityIndicator, Alert, useColorScheme, Clipboard, RefreshControl, FlatList } from "react-native";
-import { API_URL, API_USER, API_PASSWORD } from '@env';
 import { SafeAreaView } from "react-native-safe-area-context";
+import { auth } from "@/constants/Auth";
 
 export default function Device() {
     const [dataMac, setDataMac] = useState([]);
@@ -29,11 +29,11 @@ export default function Device() {
     const handleResetDefault = async () => {
         setIsLoading(true);
         try {
-            const response = await fetch(`${API_URL}/api/v2/device/get`, {
+            const response = await fetch(`${auth.url_anlix}/api/v2/device/get`, {
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Basic ' + btoa(API_USER + ':' + API_PASSWORD)
+                    'Authorization': 'Basic ' + btoa(auth.username + ':' + auth.password)
                 },
                 body: JSON.stringify({ "fields": "_id,pppoe_user,model,use_tr069" })
             }).then((response) => response.json())
