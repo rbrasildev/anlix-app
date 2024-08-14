@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Alert, TextInput, TouchableOpacity, KeyboardAvoidingView, ActivityIndicator, useColorScheme } from "react-native";
 import { useRouter } from 'expo-router';
 import { StyleSheet } from "react-native";
@@ -8,8 +8,7 @@ import Configuration from "@/components/Configuration";
 
 
 export default function HomeScreen() {
-    const [pppoe, setPppoe] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
+    const [dataMac, setDataMac] = useState({});
     const [isConfigured, setIsConfigured] = useState(true);
 
     const router = useRouter()
@@ -29,130 +28,62 @@ export default function HomeScreen() {
 
     const theme = scheme === 'light' ? lightTheme : darkTheme;
 
+    const handleAnlix = async () => {
 
-    const getDataSgp = async () => {
         try {
-            setIsLoading(true);
-            const response = await fetch(`${auth.url_sgp}/api/api.php?login=${pppoe}`).then((response) => response.json())
-            console.log(response)
-
-            if (pppoe === "") {
-                Alert.alert(
-                    "Atenção",
-                    "Este campo não pode ser vazio verme!",
-                );
-                setIsLoading(false);
-                return;
-            }
-
-            if (!response.login) {
-                Alert.alert(
-                    "Falha ao buscar dados",
-                    "Cliente não encontrado!",
-                );
-                setIsLoading(false);
-                return;
-            }
-
-            router.push({
-                pathname: "Cliente",
-                params: { cpf: pppoe }
-            });
-
-            setIsLoading(false);
+            const response = await fetch(`${auth.url_anlix}/api/v2/device/get`, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Basic ' + btoa(auth.username + ':' + auth.password)
+                },
+                body: JSON.stringify({ "fields": "model,use_tr069" })
+            }).then((response) => response.json())
+            setDataMac(response);
         } catch (error) {
-            console.log(error);
-            setIsLoading(false);
-            Alert.alert("Erro", "Ocorreu um erro ao buscar os dados.");
+            console.log(error)
         }
     }
+
+    useEffect(() => {
+        handleAnlix()
+    }, [])
+
 
     if (!isConfigured) {
         return <Configuration />
     }
 
     return (
-        <View style={{...theme, flex:1, padding:15, justifyContent:'center'}}>
-            <KeyboardAvoidingView behavior="position" enabled>
-                <Text style={{ fontSize: 32, color: '#4CB752' }}>Anlix apply</Text>
-
-                <Text style={{...theme, backgroundColor:'transparent', fontSize: 20, color: "#d0d0d0", fontWeight: 'bold' }}>PPPoE</Text>
-
-                <View style={{ flexDirection: 'row', borderWidth: 1, ...theme, borderRadius: 15, marginVertical: 10, alignItems: 'center' }}>
-                    <TextInput
-                        style={{
-                            ...theme,
-                            flex: 1,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            paddingLeft: 20,
-                            fontSize: 20,
-                            padding: 15,
-                            backgroundColor: 'transparent'
-                        }}
-                        placeholderTextColor="#87949D"
-                        placeholder="Digite login pppoe"
-                        value={pppoe}
-                        onChangeText={setPppoe}
-                        autoCapitalize={"none"}
-                    />
-
-                    {pppoe && (
-                        <TouchableOpacity
-
-                            onPress={() => setPppoe('')}
-                            style={{ padding: 4, paddingHorizontal: 10 }}>
-
-                            <MaterialCommunityIcons
-                                style={{ padding: 3 }}
-                                color={'#666'}
-                                size={25}
-                                name='close-octagon'
-                            />
-                        </TouchableOpacity>
-                    )}
+        <View style={{ flex: 1, flexDirection: 'row', gap: 3, padding: 15, justifyContent: 'center' }}>
+            <View style={{ width: '50%', height: '100%', borderRadius: 15, }}>
+                <View style={{ ...theme, borderWidth: 1, padding: 20, margin:10, borderRadius: 15, paddingVertical: 40, justifyContent: 'center' }}>
+                    <Text style={{ ...theme }}>TR069</Text>
+                    <Text style={{ ...theme, fontSize: 32 }}>{dataMac.length}</Text>
+                </View>
+                <View style={{ ...theme, borderWidth: 1, padding: 20, margin:10, borderRadius: 15 }}>
+                    <Text style={{ ...theme }}>XX230v</Text>
+                    <Text style={{ ...theme, fontSize: 32 }}>{dataMac.filter(item => item.model === 'XX230v').length}</Text>
+                </View>
+                <View style={{ ...theme, borderWidth: 1, padding: 20, margin:10, borderRadius: 15 }}>
+                    <Text style={{ ...theme }}>XX530v</Text>
+                    <Text style={{ ...theme, fontSize: 32 }}>{dataMac.filter(item => item.model === 'XX530v').length}</Text>
                 </View>
 
-                <TouchableOpacity style={styles.button} onPress={getDataSgp}>
-                    <Text style={{ fontSize: 20, fontWeight: 'medium' }}>Enviar</Text>
-                    <View style={{ marginLeft: 10 }}>
-                        {isLoading && <ActivityIndicator size="small" color="#fff" />}
-                    </View>
-                </TouchableOpacity>
-            </KeyboardAvoidingView>
-        </View>
+            </View>
+            <View style={{ width: '50%', height: '100%', borderRadius: 15, padding: 15 }}>
+                <View style={{ ...theme, borderWidth: 1, padding: 20, margin:10, borderRadius: 15 }}>
+                    <Text style={{ ...theme }}>EC220</Text>
+                    <Text style={{ ...theme, fontSize: 32 }}>{dataMac.filter(item => item.model === 'EC220-G5').length}</Text>
+                </View>
+                <View style={{ ...theme, borderWidth: 1, padding: 20, margin:10, borderRadius: 15 }}>
+                    <Text style={{ ...theme }}>EX220</Text>
+                    <Text style={{ ...theme, fontSize: 32 }}>{dataMac.filter(item => item.model === 'EX220').length}</Text>
+                </View>
+            </View>
+
+        </View >
     )
 }
 
 
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 20,
-        // backgroundColor: '#131314',
-        justifyContent: 'center',
-    },
-    input: {
-        backgroundColor: '#1E1F20',
-        height: 60,
-        borderRadius: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 10,
-        marginBottom: 10,
-        paddingLeft: 20,
-        fontSize: 20,
-        color: '#87949D',
-    },
-    button: {
-        backgroundColor: '#4CB752',
-        height: 60,
-        borderRadius: 15,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 30,
-        flexDirection: 'row',
-        gap: 3,
-    }
-})
