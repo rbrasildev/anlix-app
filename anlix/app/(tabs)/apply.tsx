@@ -3,9 +3,10 @@ import { View, Text, Alert, TextInput, TouchableOpacity, KeyboardAvoidingView, A
 import { useRouter } from 'expo-router';
 import { StyleSheet } from "react-native";
 import { auth } from "@/constants/Auth";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 
-export default function Apply() {
+export default function HomeScreen() {
     const [pppoe, setPppoe] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
@@ -69,25 +70,42 @@ export default function Apply() {
                 <Text style={{ fontSize: 32, color: '#4CB752' }}>Anlix apply</Text>
 
                 <Text style={{ fontSize: 20, color: "#d0d0d0", fontWeight: 'bold' }}>PPPoE</Text>
-                <TextInput
-                    style={{
-                        ...theme,
-                        height: 60,
-                        borderRadius: 10,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginTop: 10,
-                        marginBottom: 10,
-                        paddingLeft: 20,
-                        fontSize: 20,
-                        borderWidth: 1,
-                    }}
-                    placeholderTextColor="#87949D"
-                    placeholder="Digite login pppoe"
-                    value={pppoe}
-                    onChangeText={setPppoe}
-                    autoCapitalize={"none"}
-                />
+
+                <View style={{flexDirection:'row', borderWidth:1, ...theme, borderRadius:15, marginVertical:10, alignItems:'center'}}>
+                    <TextInput
+                        style={{
+                            ...theme,
+                            flex:1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            paddingLeft: 20,
+                            fontSize: 20,
+                            padding:15,
+                            backgroundColor:'transparent'
+                        }}
+                        placeholderTextColor="#87949D"
+                        placeholder="Digite login pppoe"
+                        value={pppoe}
+                        onChangeText={setPppoe}
+                        autoCapitalize={"none"}
+                    />
+
+                    {pppoe && (
+                        <TouchableOpacity
+
+                            onPress={() => setPppoe('')}
+                            style={{ padding: 4, paddingHorizontal:10 }}>
+
+                            <MaterialCommunityIcons
+                                style={{ padding: 3 }}
+                                color={'#666'}
+                                size={25}
+                                name='close-octagon'
+                            />
+                        </TouchableOpacity>
+                    )}
+                </View>
+
                 <TouchableOpacity style={styles.button} onPress={getDataSgp}>
                     <Text style={{ fontSize: 20, fontWeight: 'medium' }}>Enviar</Text>
                     <View style={{ marginLeft: 10 }}>

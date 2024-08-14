@@ -9,6 +9,7 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import Settings from './settings';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -32,9 +33,9 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-
         <Stack.Screen name="Roteador" />
         <Stack.Screen name="Device" />
+        
         <Stack.Screen name="Cliente" options={() => ({
           title: 'Buscar MAC (resetdefault)',
           headerStyle: {
@@ -54,9 +55,9 @@ export default function RootLayout() {
         })} />
         <Stack.Screen name="CtoInfo"
           options={{
-            headerTitle : 'Informações da CTO',
-            headerTintColor:'#666',
-            
+            headerTitle: 'Informações da CTO',
+            headerTintColor: '#666',
+
           }}
         />
       </Stack>

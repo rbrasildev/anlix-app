@@ -1,10 +1,11 @@
-import { Tabs } from 'expo-router';
+import { router, Tabs } from 'expo-router';
 import React from 'react';
 
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -18,7 +19,20 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: 'Dashboard',
+          headerShown: true,
+          headerRight: () => (
+            <TouchableOpacity
+            style={{paddingHorizontal:10}}
+              onPress={() => {
+                router.push({
+                  pathname: 'settings'
+                })
+              }}
+            >
+              <MaterialCommunityIcons name="cog" size={32} color="#87949D" />
+            </TouchableOpacity>
+          ),
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
           ),
@@ -65,17 +79,6 @@ export default function TabLayout() {
           headerShown: true,
           tabBarIcon: ({ color, focused }) => (
             <MaterialCommunityIcons name={focused ? 'wifi-cancel' : 'wifi-cancel'} size={32} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="settings"
-        options={{
-          title: 'Settings',
-          headerTitle: 'Configurar dados de acesso',
-          headerShown: true,
-          tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons name={focused ? 'cog' : 'cog-outline'} size={32} color={color} />
           ),
         }}
       />

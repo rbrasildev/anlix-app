@@ -4,11 +4,13 @@ import { useRouter } from 'expo-router';
 import { StyleSheet } from "react-native";
 import { auth } from "@/constants/Auth";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Configuration from "@/components/Configuration";
 
 
 export default function HomeScreen() {
     const [pppoe, setPppoe] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [isConfigured, setIsConfigured] = useState(true);
 
     const router = useRouter()
     const scheme = useColorScheme();
@@ -26,6 +28,7 @@ export default function HomeScreen() {
     };
 
     const theme = scheme === 'light' ? lightTheme : darkTheme;
+
 
     const getDataSgp = async () => {
         try {
@@ -64,24 +67,28 @@ export default function HomeScreen() {
         }
     }
 
+    if (!isConfigured) {
+        return <Configuration />
+    }
+
     return (
-        <View style={styles.container}>
+        <View style={{...theme, flex:1, padding:15, justifyContent:'center'}}>
             <KeyboardAvoidingView behavior="position" enabled>
                 <Text style={{ fontSize: 32, color: '#4CB752' }}>Anlix apply</Text>
 
-                <Text style={{ fontSize: 20, color: "#d0d0d0", fontWeight: 'bold' }}>PPPoE</Text>
+                <Text style={{...theme, backgroundColor:'transparent', fontSize: 20, color: "#d0d0d0", fontWeight: 'bold' }}>PPPoE</Text>
 
-                <View style={{flexDirection:'row', borderWidth:1, ...theme, borderRadius:15, marginVertical:10, alignItems:'center'}}>
+                <View style={{ flexDirection: 'row', borderWidth: 1, ...theme, borderRadius: 15, marginVertical: 10, alignItems: 'center' }}>
                     <TextInput
                         style={{
                             ...theme,
-                            flex:1,
+                            flex: 1,
                             justifyContent: 'center',
                             alignItems: 'center',
                             paddingLeft: 20,
                             fontSize: 20,
-                            padding:15,
-                            backgroundColor:'transparent'
+                            padding: 15,
+                            backgroundColor: 'transparent'
                         }}
                         placeholderTextColor="#87949D"
                         placeholder="Digite login pppoe"
@@ -94,7 +101,7 @@ export default function HomeScreen() {
                         <TouchableOpacity
 
                             onPress={() => setPppoe('')}
-                            style={{ padding: 4 }}>
+                            style={{ padding: 4, paddingHorizontal: 10 }}>
 
                             <MaterialCommunityIcons
                                 style={{ padding: 3 }}
@@ -141,7 +148,7 @@ const styles = StyleSheet.create({
     button: {
         backgroundColor: '#4CB752',
         height: 60,
-        borderRadius: 10,
+        borderRadius: 15,
         justifyContent: 'center',
         alignItems: 'center',
         marginBottom: 30,

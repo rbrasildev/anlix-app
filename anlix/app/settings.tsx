@@ -20,9 +20,9 @@ export default function Settings() {
     const theme = scheme === 'light' ? lightTheme : darkTheme;
     return (
         <KeyboardAvoidingView behavior="position" style={{ padding: 15 }}>
-            <View style={{ borderWidth: 1, padding: 15, borderRadius: 15, }}>
-                <Text style={{ fontSize: 22, ...theme, backgroundColor: 'transparent' }}>Dados do ISP</Text>
-                <Text style={{ ...theme, backgroundColor: 'transparent' }}>Digite a url do ISP</Text>
+            <View style={{  padding: 15, borderRadius: 15, }}>
+                <Text style={{ fontSize: 22, ...theme, backgroundColor: 'transparent' }}>Dados do SGP</Text>
+                <Text style={{ ...theme, backgroundColor: 'transparent' }}>Digite a url do SGP</Text>
                 <TextInput
                     style={{
                         ...theme,

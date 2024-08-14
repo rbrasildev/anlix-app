@@ -14,14 +14,14 @@ export default function Cto() {
 
     const lightTheme = {
         textColor: '#000',
-        borderColor: '#ccc',
+        borderColor: '#ddd',
         color: '#333',
         backgroundColor: '#fff',
     };
 
     const darkTheme = {
         textColor: '#fff',
-        color: '#ccc',
+        color: '#666',
         borderColor: '#212121',
         backgroundColor: '#141414'
     };
@@ -48,7 +48,7 @@ export default function Cto() {
     }, [])
 
     return (
-        <View style={{ flex: 1, padding: 10 }}>
+        <View style={{ flex: 3, padding: 10 }}>
             <FlatList
                 style={{ padding: 5 }}
                 data={data}
@@ -61,16 +61,16 @@ export default function Cto() {
                     />
                 }
                 ListHeaderComponent={
-                    <View style={{ padding:15, borderRadius:15, marginBottom:10}}>
-                        <View style={{ marginBottom: 15, marginTop: -10, flexDirection: 'row', alignItems: 'center', paddingTop: 20 }}>
+                    <View style={{ padding: 15, borderRadius: 15}}>
+                        <View style={{ marginBottom: 3, flexDirection: 'row', alignItems: 'center'}}>
                             <MaterialCommunityIcons
                                 name="package"
                                 size={32}
-                                color='#B8001C'
+                                style={{...theme, backgroundColor:'transparent'}}
                             />
                             <Text style={{ color: '#666', fontSize: 24, }}>{ctoIdent}</Text>
                         </View>
-                        <View style={{ flexDirection: 'row', marginBottom: 10, gap: 10 }}>
+                        <View style={{ flexDirection: 'row', gap: 10 }}>
                             <View style={{ alignItems: 'center', justifyContent: 'center', borderRadius: 20 }}>
                                 <Text style={{ color: '#666', fontSize: 16, fontWeight: 'bold' }}><MaterialCommunityIcons size={16} name="image-filter-frames" /> Ocupadas ({totalClientes})</Text>
                             </View>
@@ -87,8 +87,7 @@ export default function Cto() {
                             borderRadius: 15,
                             padding: 10,
                             borderWidth: 0.5,
-                            backgroundColor: item.status == 3 ? 'red' : item.status == 4 ? '#F28705' : '#fff',
-                            marginBottom:4
+                            marginBottom: 4
                         }}>
                         <View>
                             <Text
@@ -98,16 +97,15 @@ export default function Cto() {
                                     fontWeight: "700",
                                     marginBottom: 4,
                                     fontSize: 18,
-                                    color: item.status == 3 ? '#590202' : item.status == 4 ? '#141414' : '#666',
                                 }}>
                                 {item.nome}
                             </Text>
 
                             <Text style={{
                                 ...theme,
-                                backgroundColor: 'transparent',
+
                                 paddingLeft: 5,
-                                color: item.status == 3 ? '#red' : item.status == 4 ? '#fff' : '#666'
+                                color: item.status == 3 ? 'red' : item.status == 4 ? '#F2AE30' : '#666'
                             }}>
                                 {`${item.login} - ${item.status == 3 ? 'Cancelado' : item.status == 4 ? 'Suspenso' : 'Ativo'}`}
                             </Text>

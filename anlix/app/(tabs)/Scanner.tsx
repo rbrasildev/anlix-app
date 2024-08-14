@@ -67,7 +67,6 @@ export default function Device() {
                         key={item._id}
                         style={{
                             ...theme,
-                            marginTop: 4,
                             alignItems: 'center',
                             justifyContent: 'space-between',
                             flexDirection: "row",
