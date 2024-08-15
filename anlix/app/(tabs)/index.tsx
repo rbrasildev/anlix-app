@@ -4,13 +4,11 @@ import { useRouter } from 'expo-router';
 import { StyleSheet } from "react-native";
 import { auth } from "@/constants/Auth";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import Configuration from "@/components/Configuration";
+import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 
 
 export default function HomeScreen() {
     const [dataMac, setDataMac] = useState([]);
-    const [isConfigured, setIsConfigured] = useState(true);
-
     const router = useRouter()
     const scheme = useColorScheme();
 
@@ -51,19 +49,15 @@ export default function HomeScreen() {
     }, [])
 
 
-    if (!isConfigured) {
-        return <Configuration />
-    }
-
     return (
         <View style={{ flex: 1, flexDirection: 'row', gap: 3, padding: 15, justifyContent: 'center' }}>
             <View style={{ width: '50%', height: '100%', borderRadius: 15, }}>
                 <View style={{ ...theme, borderWidth: 0.5, padding: 20, margin: 10, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
-                        <MaterialCommunityIcons style={{ ...theme }} name="block-helper" />
+                        <MaterialCommunityIcons style={{ ...theme }} size={22} name="access-point" />
                         <Text style={{ ...theme }}>TOTAL TR069</Text>
                     </View>
-                    <View style={{ ...theme, borderWidth: 10, width: 130, height: 130, justifyContent: 'center', alignItems: 'center', borderRadius: 65, marginTop: 10 }}>
+                    <View style={{ ...theme, borderWidth: 10, width: 130, height: 130, justifyContent: 'center', alignItems: 'center', borderRadius: 65, marginTop: 10, borderColor: '#4CB752' }}>
                         <Text style={{ ...theme, fontSize: 32, fontWeight: '700' }}>{dataMac.length}</Text>
                     </View>
                 </View>
@@ -72,7 +66,7 @@ export default function HomeScreen() {
                         <MaterialCommunityIcons style={{ ...theme }} name="router-wireless" size={18} />
                         <Text style={{ ...theme }}>XX230v</Text>
                     </View>
-                    <Text style={{ ...theme, fontSize: 32, fontWeight: 'bold', fontWeight: 'bold' }}>{dataMac.filter(item => item.model === 'XX230v').length}</Text>
+                    <Text style={{ ...theme, fontSize: 32, fontWeight: 'bold' }}>{dataMac.filter(item => item.model === 'XX230v').length}</Text>
                 </View>
                 <View style={{ ...theme, borderWidth: 1, padding: 20, margin: 10, borderRadius: 15 }}>
                     <View style={{ flexDirection: 'row', gap: 3 }}>

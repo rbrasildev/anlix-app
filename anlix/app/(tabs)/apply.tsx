@@ -3,10 +3,10 @@ import { View, Text, Alert, TextInput, TouchableOpacity, KeyboardAvoidingView, A
 import { useRouter } from 'expo-router';
 import { StyleSheet } from "react-native";
 import { auth } from "@/constants/Auth";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Toast from "react-native-toast-message";
 
 
-export default function HomeScreen() {
+export default function Apply() {
     const [pppoe, setPppoe] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
@@ -30,23 +30,22 @@ export default function HomeScreen() {
     const getDataSgp = async () => {
         try {
             setIsLoading(true);
-            const response = await fetch(`${auth.url_sgp}/api/api.php?login=${pppoe}`).then((response) => response.json())
-            console.log(response)
+            const response = await fetch(`${auth.url_sgp}/api.php?login=${pppoe}`).then((response) => response.json())
 
             if (pppoe === "") {
-                Alert.alert(
-                    "Atenção",
-                    "Este campo não pode ser vazio verme!",
-                );
+                Toast.show({
+                    type: 'info',
+                    text1: 'Este campo não pode ser vazio seu verme!'
+                })
                 setIsLoading(false);
                 return;
             }
 
             if (!response.login) {
-                Alert.alert(
-                    "Falha ao buscar dados",
-                    "Cliente não encontrado!",
-                );
+                Toast.show({
+                    type: 'error',
+                    text1: 'Cliente não encontrado'
+                })
                 setIsLoading(false);
                 return;
             }
@@ -60,7 +59,10 @@ export default function HomeScreen() {
         } catch (error) {
             console.log(error);
             setIsLoading(false);
-            Alert.alert("Erro", "Ocorreu um erro ao buscar os dados.");
+            Toast.show({
+                type: 'error',
+                text1: 'Ocorreu um erro ao buscar os dados'
+            })
         }
     }
 
@@ -70,42 +72,25 @@ export default function HomeScreen() {
                 <Text style={{ fontSize: 32, color: '#4CB752' }}>Anlix apply</Text>
 
                 <Text style={{ fontSize: 20, color: "#d0d0d0", fontWeight: 'bold' }}>PPPoE</Text>
-
-                <View style={{flexDirection:'row', borderWidth:1, ...theme, borderRadius:15, marginVertical:10, alignItems:'center'}}>
-                    <TextInput
-                        style={{
-                            ...theme,
-                            flex:1,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            paddingLeft: 20,
-                            fontSize: 20,
-                            padding:15,
-                            backgroundColor:'transparent'
-                        }}
-                        placeholderTextColor="#87949D"
-                        placeholder="Digite login pppoe"
-                        value={pppoe}
-                        onChangeText={setPppoe}
-                        autoCapitalize={"none"}
-                    />
-
-                    {pppoe && (
-                        <TouchableOpacity
-
-                            onPress={() => setPppoe('')}
-                            style={{ padding: 4, paddingHorizontal:10 }}>
-
-                            <MaterialCommunityIcons
-                                style={{ padding: 3 }}
-                                color={'#666'}
-                                size={25}
-                                name='close-octagon'
-                            />
-                        </TouchableOpacity>
-                    )}
-                </View>
-
+                <TextInput
+                    style={{
+                        ...theme,
+                        height: 60,
+                        borderRadius: 10,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginTop: 10,
+                        marginBottom: 10,
+                        paddingLeft: 20,
+                        fontSize: 20,
+                        borderWidth: 1,
+                    }}
+                    placeholderTextColor="#87949D"
+                    placeholder="Digite login pppoe"
+                    value={pppoe}
+                    onChangeText={setPppoe}
+                    autoCapitalize={"none"}
+                />
                 <TouchableOpacity style={styles.button} onPress={getDataSgp}>
                     <Text style={{ fontSize: 20, fontWeight: 'medium' }}>Enviar</Text>
                     <View style={{ marginLeft: 10 }}>

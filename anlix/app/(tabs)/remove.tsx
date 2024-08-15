@@ -4,7 +4,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FlatList } from "react-native";
 import { useColorScheme } from "react-native";
 import { Text, View, TouchableOpacity, ActivityIndicator, Alert, SafeAreaView, Clipboard, TextInput } from "react-native";
-
+import { auth } from "@/constants/Auth";
+import Toast from "react-native-toast-message";
 
 interface roteadorProps {
     _id: string;
@@ -36,10 +37,10 @@ export default function Remove() {
     const callPostApi = async () => {
         const api = await axios({
             method: "POST",
-            url: "https://flashtins.redeconexaonet.com/api/v2/device/get/",
+            url: `${auth.url_anlix}/api/v2/device/get/`,
             auth: {
-                username: "admin",
-                password: "bld2154038"
+                username: auth.username,
+                password: auth.password
             },
             data: {
                 "fields": "_id,pppoe_user,model,use_tr069"
@@ -57,18 +58,25 @@ export default function Remove() {
         setIsLoading(true)
         const api = await axios({
             method: "DELETE",
-            url: `https://flashtins.redeconexaonet.com/api/v2/device/delete/${mac}`,
+            url: `${auth.url_anlix}/api/v2/device/delete/${mac}`,
             auth: {
-                username: "brunodantas",
-                password: "bld2154038"
-            }
+                username: auth.username,
+                password: auth.password
+            },
 
         }).catch(error => {
-            Alert.alert(`Error ${error.response.status}`, error.response.data.message)
+            Toast.show({
+                type: "error",
+                text1: `Error ${error.response.status} - ${error.response.data.message}`
+            })
             setIsLoading(false)
             return;
         })
-        Alert.alert('Sucesso', `${api.data.message}`)
+        Toast.show({
+            type: "success",
+            text1: api.data.message,
+        })
+
         setIsLoading(false);
         setMac('')
         callPostApi()

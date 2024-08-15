@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { auth } from "@/constants/Auth";
+import Toast from "react-native-toast-message";
 
 export default function App() {
 
@@ -28,16 +29,19 @@ export default function App() {
     const theme = scheme === 'light' ? lightTheme : darkTheme;
 
     async function navigateToCto() {
-        const data = await fetch(`${auth.url_sgp}/api/api.php?cto=${ctoIdent}`).then((response) => response.json())
+        const data = await fetch(`${auth.url_sgp}/api.php?cto=${ctoIdent}`).then((response) => response.json())
         if (ctoIdent == '') {
-            Alert.alert(
-                "Atenção",
-                "Este campo não pode ser vazio verme!",
-            )
+            Toast.show({
+                type: 'info',
+                text1: 'Este campo não pode ser vazio seu verme!'
+            })
             return
         }
         if (data.status == 404) {
-            Alert.alert('Error 404', data.message);
+            Toast.show({
+                type: 'error',
+                text1: data.message
+            });
             return
         } else {
             router.push({

@@ -21,9 +21,12 @@ export default function TabLayout() {
         options={{
           title: 'Dashboard',
           headerShown: true,
+          headerLeft: () => (
+            < MaterialCommunityIcons style={{marginLeft:15}} name="tablet-dashboard" size={32} color="#87949D" />
+          ),
           headerRight: () => (
             <TouchableOpacity
-            style={{paddingHorizontal:10}}
+              style={{ borderWidth:0.3, borderColor:'#ccc', marginRight:10, padding:3, borderRadius:5 }}
               onPress={() => {
                 router.push({
                   pathname: 'settings'

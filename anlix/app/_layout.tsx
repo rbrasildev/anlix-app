@@ -9,7 +9,7 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import Settings from './settings';
+import Toast from 'react-native-toast-message';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -30,37 +30,40 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="Roteador" />
-        <Stack.Screen name="Device" />
-        
-        <Stack.Screen name="Cliente" options={() => ({
-          title: 'Buscar MAC (resetdefault)',
-          headerStyle: {
-            ...DarkTheme
-          },
-          headerRight: () => (
-            <TouchableOpacity
-              onPress={() => {
-                router.push({
-                  pathname: 'Device'
-                })
-              }}
-            >
-              <MaterialIcons name="search" size={32} color="#87949D" />
-            </TouchableOpacity>
-          ),
-        })} />
-        <Stack.Screen name="CtoInfo"
-          options={{
-            headerTitle: 'Informações da CTO',
-            headerTintColor: '#666',
+    <>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="Roteador" />
+          <Stack.Screen name="Device" />
 
-          }}
-        />
-      </Stack>
-    </ThemeProvider>
+          <Stack.Screen name="Cliente" options={() => ({
+            title: 'Buscar MAC (resetdefault)',
+            headerStyle: {
+              ...DarkTheme
+            },
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => {
+                  router.push({
+                    pathname: 'Device'
+                  })
+                }}
+              >
+                <MaterialIcons name="search" size={32} color="#87949D" />
+              </TouchableOpacity>
+            ),
+          })} />
+          <Stack.Screen name="CtoInfo"
+            options={{
+              headerTitle: 'Informações da CTO',
+              headerTintColor: '#666',
+
+            }}
+          />
+        </Stack>
+      </ThemeProvider>
+      <Toast />
+    </>
   );
 }

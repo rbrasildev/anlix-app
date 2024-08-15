@@ -6,6 +6,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text, Alert, View, TouchableOpacity, ActivityIndicator, useColorScheme } from 'react-native';
 import { auth } from '@/constants/Auth';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
+import Toast from 'react-native-toast-message';
 
 interface RoteadorProps {
     online_status: boolean;
@@ -97,32 +98,34 @@ export default function Roteador() {
 
         }).catch(error => {
             if (error.response.status == 500) {
-                Alert.alert(
-                    error.message,
-                    "Erro ao atualizar o Roteador, Favor pedir para as meninas tirar a porra dos caracteres especiais. Tente novamente!",
-                )
+                Toast.show({
+                    type: 'error',
+                    text1: 'Erro ao atualizar o Roteador, Favor pedir para as meninas tirar a porra dos caracteres especiais. Tente novamente!',
+                })
+
             }
             if (error.response.status == 404) {
-                Alert.alert(
-                    error.message,
-                    "Falha ao conectar com o servidor"
-                );
+                Toast.show({
+                    type: 'error',
+                    text1: error.message + "Falha ao conectar com o servidor",
+                })
+
             }
             if (error.code == "ERR_NETWORK") {
-                Alert.alert(
-                    "Erro",
-                    error.message
-                )
+                Toast.show({
+                    type: 'error',
+                    text1: error.message,
+                })
             }
             console.log(error)
             return;
         })
 
         if (response.status == 200) {
-            Alert.alert(
-                'Successo',
-                "Configuração aplicada com sucesso!"
-            )
+            Toast.show({
+                type: 'success',
+                text1: "Configuração aplicada com sucesso!"
+            })
         }
 
     }

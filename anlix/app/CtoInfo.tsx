@@ -39,7 +39,7 @@ export default function Cto() {
     };
 
     const handleCto = async () => {
-        const data = await fetch(`${auth.url_sgp}/api/api.php?cto=${ctoIdent}`).then((response) => response.json())
+        const data = await fetch(`${auth.url_sgp}/api.php?cto=${ctoIdent}`).then((response) => response.json())
         setData(data)
         setTotalClientes(data.length)
     }

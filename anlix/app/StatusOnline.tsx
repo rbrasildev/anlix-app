@@ -10,7 +10,7 @@ interface StatusConnectionProps {
 export function StatusOnline({ isOnline }: StatusConnectionProps) {
     const [isOn, setIsOn] = useState(false)
     async function handleStatusConnection() {
-        const on = await fetch(`${auth.url_sgp}/api/api.php?online=${isOnline}`).then((response) => response.json())
+        const on = await fetch(`${auth.url_sgp}/api.php?online=${isOnline}`).then((response) => response.json())
         setIsOn(on);
     }
     useEffect(() => {
