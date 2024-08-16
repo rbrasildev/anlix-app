@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text, View, TouchableOpacity, ActivityIndicator, Alert, useColorScheme, Clipboard, RefreshControl, FlatList, SafeAreaView } from "react-native";
-import { auth } from "@/constants/Auth";
+
+import config from "./config";
 
 export default function Device() {
     const [dataMac, setDataMac] = useState([]);
@@ -30,6 +31,7 @@ export default function Device() {
     const handleResetDefault = async () => {
         setIsLoading(true);
         try {
+            const auth = await config();
             const response = await fetch(`${auth.url_anlix}/api/v2/device/get`, {
                 method: 'post',
                 headers: {
@@ -125,7 +127,7 @@ export default function Device() {
                     refreshing={refreshing}
                     onRefresh={handleRefresh}
                     colors={['#1E90FF']}
-                    tintColor={'#1E90FF'} 
+                    tintColor={'#1E90FF'}
                 />
             }
             ListEmptyComponent={

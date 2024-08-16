@@ -7,6 +7,7 @@ import { Text, Alert, View, TouchableOpacity, ActivityIndicator, useColorScheme 
 import { auth } from '@/constants/Auth';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import Toast from 'react-native-toast-message';
+import config from './config';
 
 interface RoteadorProps {
     online_status: boolean;
@@ -48,6 +49,7 @@ export default function Roteador() {
 
 
     const callGetApi = async () => {
+        const auth = await config();
         try {
             const response = await fetch(`${auth.url_anlix}/api/v2/device/update/${params.mac}`,
                 {
@@ -77,6 +79,7 @@ export default function Roteador() {
 
     //criar wifi
     const callPostApi = async () => {
+        const auth = await config();
         const response = await fetch(`${auth.url_anlix}/api/v2/device/update/${params.mac}`, {
             method: 'PUT',
             headers: {

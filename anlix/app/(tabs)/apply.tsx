@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { View, Text, Alert, TextInput, TouchableOpacity, KeyboardAvoidingView, ActivityIndicator, useColorScheme } from "react-native";
 import { useRouter } from 'expo-router';
 import { StyleSheet } from "react-native";
-import { auth } from "@/constants/Auth";
+import config from "../config";
 import Toast from "react-native-toast-message";
-
 
 export default function Apply() {
     const [pppoe, setPppoe] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+
 
     const router = useRouter()
     const scheme = useColorScheme();
@@ -27,10 +27,16 @@ export default function Apply() {
 
     const theme = scheme === 'light' ? lightTheme : darkTheme;
 
+
     const getDataSgp = async () => {
         try {
             setIsLoading(true);
+
+
+            const auth = await config();
+
             const response = await fetch(`${auth.url_sgp}/api.php?login=${pppoe}`).then((response) => response.json())
+
 
             if (pppoe === "") {
                 Toast.show({

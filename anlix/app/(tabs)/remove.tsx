@@ -4,8 +4,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FlatList } from "react-native";
 import { useColorScheme } from "react-native";
 import { Text, View, TouchableOpacity, ActivityIndicator, Alert, SafeAreaView, Clipboard, TextInput } from "react-native";
-import { auth } from "@/constants/Auth";
 import Toast from "react-native-toast-message";
+import config from "../config";
 
 interface roteadorProps {
     _id: string;
@@ -35,6 +35,7 @@ export default function Remove() {
 
 
     const callPostApi = async () => {
+        const auth = await config();
         const api = await axios({
             method: "POST",
             url: `${auth.url_anlix}/api/v2/device/get/`,

@@ -3,7 +3,8 @@ import { View, Text, FlatList, RefreshControl, useColorScheme } from "react-nati
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StatusOnline } from "./StatusOnline";
 import { useGlobalSearchParams } from "expo-router";
-import { auth } from "@/constants/Auth";
+
+import config from "./config";
 
 export default function Cto() {
     const [data, setData] = useState()
@@ -39,6 +40,7 @@ export default function Cto() {
     };
 
     const handleCto = async () => {
+        const auth = await config();
         const data = await fetch(`${auth.url_sgp}/api.php?cto=${ctoIdent}`).then((response) => response.json())
         setData(data)
         setTotalClientes(data.length)
@@ -61,12 +63,12 @@ export default function Cto() {
                     />
                 }
                 ListHeaderComponent={
-                    <View style={{ padding: 15, borderRadius: 15}}>
-                        <View style={{ marginBottom: 3, flexDirection: 'row', alignItems: 'center'}}>
+                    <View style={{ padding: 15, borderRadius: 15 }}>
+                        <View style={{ marginBottom: 3, flexDirection: 'row', alignItems: 'center' }}>
                             <MaterialCommunityIcons
                                 name="package"
                                 size={32}
-                                style={{...theme, backgroundColor:'transparent'}}
+                                style={{ ...theme, backgroundColor: 'transparent' }}
                             />
                             <Text style={{ color: '#666', fontSize: 24, }}>{ctoIdent}</Text>
                         </View>
@@ -105,7 +107,7 @@ export default function Cto() {
                                 ...theme,
 
                                 paddingLeft: 5,
-                                color: item.status == 3 ? 'red' : item.status == 4 ? '#F2AE30' : '#666'
+                                color: item.status == 3 ? '#E3371E' : item.status == 4 ? '#F2AE30' : '#666'
                             }}>
                                 {`${item.login} - ${item.status == 3 ? 'Cancelado' : item.status == 4 ? 'Suspenso' : 'Ativo'}`}
                             </Text>

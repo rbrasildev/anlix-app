@@ -1,11 +1,13 @@
-import { KeyboardAvoidingView, Text, TextInput, TouchableOpacity, View, useColorScheme, ScrollView } from "react-native"
+import { KeyboardAvoidingView, Text, TextInput, TouchableOpacity, View, useColorScheme, ScrollView, Alert } from "react-native"
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 
 import Toast from "react-native-toast-message";
+import { router } from "expo-router";
+import { MaterialIcons } from "@expo/vector-icons";
 
 interface AuthProps {
-    urlSgp: string;
+    url_sgp: string;
     urlAnlix: string;
     username: string;
     passwrod: string;
@@ -13,8 +15,8 @@ interface AuthProps {
 
 export default function Settings() {
 
-    const [urlSgp, setUrlSgp] = useState('');
-    const [urlAnlix, setUrlAnlix] = useState('');
+    const [url_sgp, setUrlSgp] = useState('');
+    const [url_anlix, setUrlAnlix] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -38,8 +40,8 @@ export default function Settings() {
 
     const handleSaveData = async () => {
         const newData = {
-            urlSgp,
-            urlAnlix,
+            url_sgp,
+            url_anlix,
             username,
             password
         }
@@ -50,19 +52,36 @@ export default function Settings() {
             type: "success",
             text1: "Configuração realizada som sucesso!"
         })
+        
+    }
+
+    async function removeConfig() {
+        AsyncStorage.removeItem('@anlix:auth');
+
+        Toast.show({
+            type: 'success',
+            text1: 'Configuração removida com sucesso!'
+        })
 
     }
 
 
 
     return (
-        <KeyboardAvoidingView behavior="position" style={{ padding: 15 }}>
+        <KeyboardAvoidingView behavior="position" style={{ ...theme, flex: 1, padding: 15 }}>
             <ScrollView>
                 <View style={{ padding: 15, borderRadius: 15, }}>
-                    <Text style={{ fontSize: 22, ...theme, backgroundColor: 'transparent' }}>Dados do SGP</Text>
+                    <View style={{ ...theme, flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <Text style={{ fontSize: 22, ...theme, backgroundColor: 'transparent' }}>Dados do SGP</Text>
+                        <TouchableOpacity onPress={() => removeConfig()} style={{ ...theme, borderRadius: 10, padding: 10, flexDirection: 'row', borderWidth: 1, gap: 4, alignItems: 'center' }}>
+                            <Text style={{ ...theme, borderRadius: 10 }}>Limpar</Text>
+                            <MaterialIcons name="auto-delete" size={22} color={'#4CB752'} />
+                        </TouchableOpacity>
+                    </View>
+
                     <Text style={{ ...theme, backgroundColor: 'transparent' }}>Digite a url do SGP</Text>
                     <TextInput
-                        value={urlSgp}
+                        value={url_sgp}
                         onChangeText={setUrlSgp}
                         style={{
                             ...theme,
@@ -94,7 +113,7 @@ export default function Settings() {
                         <Text style={{ ...theme, backgroundColor: 'transparent' }}>Digite a url do ANLIX</Text>
                         <TextInput
                             onChangeText={setUrlAnlix}
-                            value={urlAnlix}
+                            value={url_anlix}
                             style={{
                                 ...theme,
                                 fontSize: 18,
@@ -160,6 +179,7 @@ export default function Settings() {
                     <Text style={{ fontSize: 18, backgroundColor: 'transparent', fontWeight: '500' }}>Salvar</Text>
                 </TouchableOpacity>
             </ScrollView>
+            <Toast />
         </KeyboardAvoidingView>
     )
 }

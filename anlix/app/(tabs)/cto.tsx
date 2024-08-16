@@ -1,10 +1,11 @@
 import { View, Text, TouchableOpacity, TextInput, useColorScheme, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from "react";
-import { Alert } from "react-native";
+
 import { useRouter } from "expo-router";
-import { auth } from "@/constants/Auth";
+
 import Toast from "react-native-toast-message";
+import config from "../config";
 
 export default function App() {
 
@@ -29,28 +30,38 @@ export default function App() {
     const theme = scheme === 'light' ? lightTheme : darkTheme;
 
     async function navigateToCto() {
-        const data = await fetch(`${auth.url_sgp}/api.php?cto=${ctoIdent}`).then((response) => response.json())
-        if (ctoIdent == '') {
-            Toast.show({
-                type: 'info',
-                text1: 'Este campo não pode ser vazio seu verme!'
-            })
-            return
-        }
-        if (data.status == 404) {
+        try {
+            const auth = await config();
+
+            const data = await fetch(`${auth.url_sgp}/api.php?cto=${ctoIdent}`).then((response) => response.json())
+            if (ctoIdent == '') {
+                Toast.show({
+                    type: 'info',
+                    text1: 'Este campo não pode ser vazio seu verme!'
+                })
+                return
+            }
+            if (data.status == 404) {
+                Toast.show({
+                    type: 'error',
+                    text1: data.message
+                });
+                return
+            } else {
+                router.push({
+                    pathname: 'CtoInfo',
+                    params: {
+                        ctoIdent: ctoIdent,
+                    },
+                })
+            }
+        } catch (erro) {
             Toast.show({
                 type: 'error',
-                text1: data.message
-            });
-            return
-        } else {
-            router.push({
-                pathname: 'CtoInfo',
-                params: {
-                    ctoIdent: ctoIdent,
-                },
+                text1: 'Erro inesperado'
             })
         }
+
     }
 
     return (

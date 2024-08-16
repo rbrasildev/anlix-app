@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Alert, TextInput, TouchableOpacity, KeyboardAvoidingView, ActivityIndicator, useColorScheme } from "react-native";
-import { useRouter } from 'expo-router';
-import { StyleSheet } from "react-native";
-import { auth } from "@/constants/Auth";
+import { View, Text, useColorScheme } from "react-native";
+
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useAsyncStorage } from "@react-native-async-storage/async-storage";
+import config from "../config";
+import { auth } from "@/constants/Auth";
+import { router } from "expo-router";
 
 
 export default function HomeScreen() {
     const [dataMac, setDataMac] = useState([]);
-    const router = useRouter()
     const scheme = useColorScheme();
 
     const lightTheme = {
@@ -27,9 +26,15 @@ export default function HomeScreen() {
 
     const theme = scheme === 'light' ? lightTheme : darkTheme;
 
+
     const handleAnlix = async () => {
 
         try {
+            const auth = await config()
+            if (!auth) {
+                router.push({ pathname: '/settings' })
+                return;
+            }
             const response = await fetch(`${auth.url_anlix}/api/v2/device/get`, {
                 method: 'post',
                 headers: {
@@ -47,6 +52,7 @@ export default function HomeScreen() {
     useEffect(() => {
         handleAnlix()
     }, [])
+
 
 
     return (
@@ -84,6 +90,13 @@ export default function HomeScreen() {
                         <Text style={{ ...theme }}>EC220</Text>
                     </View>
                     <Text style={{ ...theme, fontSize: 32, fontWeight: 'bold' }}>{dataMac.filter(item => item.model === 'EC220-G5').length}</Text>
+                </View>
+                <View style={{ ...theme, borderWidth: 1, padding: 20, margin: 10, borderRadius: 15 }}>
+                    <View style={{ flexDirection: 'row', gap: 3 }}>
+                        <MaterialCommunityIcons style={{ ...theme }} name="router-wireless" size={18} />
+                        <Text style={{ ...theme }}>EC225</Text>
+                    </View>
+                    <Text style={{ ...theme, fontSize: 32, fontWeight: 'bold' }}>{dataMac.filter(item => item.model === 'EC225-G5').length}</Text>
                 </View>
                 <View style={{ ...theme, borderWidth: 1, padding: 20, margin: 10, borderRadius: 15 }}>
                     <View style={{ flexDirection: 'row', gap: 3 }}>

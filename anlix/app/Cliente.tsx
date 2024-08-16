@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Alert, Clipboard, StyleSheet, useColorScheme, ScrollView } from 'react-native';
 import { useGlobalSearchParams, useRouter } from "expo-router";
-import { auth } from '@/constants/Auth';
+
 import Toast from 'react-native-toast-message';
+import config from './config';
 
 
 interface WifiProps {
@@ -57,6 +58,7 @@ export default function Cliente<WifiProps>() {
 
 
     const callGetMac = async () => {
+        const auth = await config();
         if (macAddress == "") {
             Toast.show({
                 type: 'info',
@@ -113,6 +115,7 @@ export default function Cliente<WifiProps>() {
     }
 
     const callGetApi = async () => {
+        const auth = await config();
         try {
             const response = await fetch(`${auth.url_sgp}/api.php?login=${cpf}`).then((response) => response.json())
 
