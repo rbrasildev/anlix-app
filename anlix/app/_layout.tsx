@@ -79,6 +79,8 @@ export default function RootLayout() {
           <Stack.Screen name="settings"
             options={{
               headerShown: false,
+              gestureEnabled: false,
+              headerBackVisible: false,
               headerTitle: 'Configurações de acesso',
               headerTintColor: '#666',
 

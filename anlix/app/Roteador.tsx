@@ -3,8 +3,7 @@ import { useGlobalSearchParams } from 'expo-router';
 
 import { StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Text, Alert, View, TouchableOpacity, ActivityIndicator, useColorScheme } from 'react-native';
-import { auth } from '@/constants/Auth';
+import { Text, View, TouchableOpacity, ActivityIndicator, useColorScheme } from 'react-native';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import Toast from 'react-native-toast-message';
 import config from './config';

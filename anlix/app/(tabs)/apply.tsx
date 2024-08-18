@@ -32,7 +32,6 @@ export default function Apply() {
         try {
             setIsLoading(true);
 
-
             const auth = await config();
 
             const response = await fetch(`${auth.url_sgp}/api.php?login=${pppoe}`).then((response) => response.json())
