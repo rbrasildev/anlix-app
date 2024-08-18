@@ -3,11 +3,16 @@ import { View, Text, useColorScheme } from "react-native";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import config from "../config";
-import { auth } from "@/constants/Auth";
 import { router } from "expo-router";
+
+interface DeviceProps {
+    model: String;
+    use_tr069: boolean
+}
 
 
 export default function HomeScreen() {
+    const [models, setModels] = useState<[]>([])
     const [dataMac, setDataMac] = useState([]);
     const scheme = useColorScheme();
 
@@ -35,7 +40,7 @@ export default function HomeScreen() {
                 router.push({ pathname: '/settings' })
                 return;
             }
-            const response = await fetch(`${auth.url_anlix}/api/v2/device/get`, {
+            const response: DeviceProps[] = await fetch(`${auth.url_anlix}/api/v2/device/get`, {
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/json',
@@ -43,7 +48,12 @@ export default function HomeScreen() {
                 },
                 body: JSON.stringify({ "fields": "model,use_tr069" })
             }).then((response) => response.json())
-            setDataMac(response);
+            // Extraindo modelos únicos
+            const uniqueModels: String[] = [...new Set(response.map((item: DeviceProps) => item.model))];
+
+            setModels(uniqueModels);
+            setDataMac(response)
+
         } catch (error) {
             console.log(error)
         }
@@ -53,7 +63,16 @@ export default function HomeScreen() {
         handleAnlix()
     }, [])
 
+    const renderDeviceCard = (model: string) => (
+        <View key={model} style={{ ...theme, borderWidth: 1, padding: 20, margin: 10, borderRadius: 15 }}>
+            <View style={{ flexDirection: 'row', gap: 3 }}>
+                <MaterialCommunityIcons style={{ ...theme }} name="router-wireless" size={18} />
+                <Text style={{ ...theme }}>{model}</Text>
+            </View>
+            <Text style={{ ...theme, fontSize: 36, fontWeight: 'bold' }}>{dataMac.filter(item => item.model === model).length}</Text>
+        </View>
 
+    );
 
     return (
         <View style={{ flex: 1, flexDirection: 'row', gap: 3, padding: 15, justifyContent: 'center' }}>
@@ -67,44 +86,11 @@ export default function HomeScreen() {
                         <Text style={{ ...theme, fontSize: 32, fontWeight: '700' }}>{dataMac.length}</Text>
                     </View>
                 </View>
-                <View style={{ ...theme, borderWidth: 1, padding: 20, margin: 10, borderRadius: 15 }}>
-                    <View style={{ flexDirection: 'row', gap: 3 }}>
-                        <MaterialCommunityIcons style={{ ...theme }} name="router-wireless" size={18} />
-                        <Text style={{ ...theme }}>XX230v</Text>
-                    </View>
-                    <Text style={{ ...theme, fontSize: 32, fontWeight: 'bold' }}>{dataMac.filter(item => item.model === 'XX230v').length}</Text>
-                </View>
-                <View style={{ ...theme, borderWidth: 1, padding: 20, margin: 10, borderRadius: 15 }}>
-                    <View style={{ flexDirection: 'row', gap: 3 }}>
-                        <MaterialCommunityIcons style={{ ...theme }} name="router-wireless" size={18} />
-                        <Text style={{ ...theme }}>XX530v</Text>
-                    </View>
-                    <Text style={{ ...theme, fontSize: 32, fontWeight: 'bold' }}>{dataMac.filter(item => item.model === 'XX530v').length}</Text>
-                </View>
-
+                {models.map((model, key) => (key > 2 && renderDeviceCard(model)))}
             </View>
+
             <View style={{ width: '50%', height: '100%', borderRadius: 15, padding: 15 }}>
-                <View style={{ ...theme, borderWidth: 1, padding: 20, margin: 10, borderRadius: 15 }}>
-                    <View style={{ flexDirection: 'row', gap: 3 }}>
-                        <MaterialCommunityIcons style={{ ...theme }} name="router-wireless" size={18} />
-                        <Text style={{ ...theme }}>EC220</Text>
-                    </View>
-                    <Text style={{ ...theme, fontSize: 32, fontWeight: 'bold' }}>{dataMac.filter(item => item.model === 'EC220-G5').length}</Text>
-                </View>
-                <View style={{ ...theme, borderWidth: 1, padding: 20, margin: 10, borderRadius: 15 }}>
-                    <View style={{ flexDirection: 'row', gap: 3 }}>
-                        <MaterialCommunityIcons style={{ ...theme }} name="router-wireless" size={18} />
-                        <Text style={{ ...theme }}>EC225</Text>
-                    </View>
-                    <Text style={{ ...theme, fontSize: 32, fontWeight: 'bold' }}>{dataMac.filter(item => item.model === 'EC225-G5').length}</Text>
-                </View>
-                <View style={{ ...theme, borderWidth: 1, padding: 20, margin: 10, borderRadius: 15 }}>
-                    <View style={{ flexDirection: 'row', gap: 3 }}>
-                        <MaterialCommunityIcons style={{ ...theme }} name="router-wireless" size={18} />
-                        <Text style={{ ...theme }}>EX220</Text>
-                    </View>
-                    <Text style={{ ...theme, fontSize: 32, fontWeight: 'bold' }}>{dataMac.filter(item => item.model === 'EX220').length}</Text>
-                </View>
+                {models.map((model, key) => (key <= 2 && renderDeviceCard(model)))}
             </View>
 
         </View >

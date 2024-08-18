@@ -1,6 +1,6 @@
 import { KeyboardAvoidingView, Text, TextInput, TouchableOpacity, View, useColorScheme, ScrollView, Alert } from "react-native"
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {  useState } from "react";
+import { useState } from "react";
 
 import Toast from "react-native-toast-message";
 import { router } from "expo-router";
@@ -19,6 +19,7 @@ export default function Settings() {
     const [url_anlix, setUrlAnlix] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+
 
     const scheme = useColorScheme();
 
@@ -52,7 +53,7 @@ export default function Settings() {
             type: "success",
             text1: "Configuração realizada som sucesso!"
         })
-        
+
     }
 
     async function removeConfig() {
