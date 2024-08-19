@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobalSearchParams } from 'expo-router';
-
-import { StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Text, View, TouchableOpacity, ActivityIndicator, useColorScheme } from 'react-native';
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
+import { Text, View, TouchableOpacity, ActivityIndicator, useColorScheme, StyleSheet, FlatList, ScrollView } from 'react-native';
+
 import Toast from 'react-native-toast-message';
 import config from './config';
+
+
 
 interface RoteadorProps {
     online_status: boolean;
@@ -23,7 +23,7 @@ interface RoteadorProps {
 
 export default function Roteador() {
     const [loading, setLoading] = useState(true)
-    const [dataWifi, setDataWifi] = useState<RoteadorProps>({});
+    const [dataWifi, setDataWifi] = useState<RoteadorProps>([]);
 
 
     const params = useGlobalSearchParams()
@@ -138,72 +138,89 @@ export default function Roteador() {
 
     if (loading) { return <ActivityIndicator size="large" color="#fff" /> }
 
+    const devices = (device) => {
+        return (
+            <View>
+                <FlatList
+                    data={device}
+                    keyExtractor={(item) => item._id}
+                    renderItem={({ item, index }) => (
+
+                        <Text style={{ ...theme }}>{item.dhcp_name}</Text>
+
+                    )}
+                />
+            </View>
+        )
+    }
+
     return (
         <View style={{ flex: 1, padding: 5, gap: 3 }}>
-            <View style={{ paddingHorizontal: 15, gap: 6 }}>
-                <View style={{ ...theme, padding: 10, borderRadius: 15 }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
-                        <Text style={{ ...theme, fontSize: 22 }}>{getStatus()} </Text>
-                        <MaterialCommunityIcons
-                            name='lock'
-                            size={24}
-                            style={{ ...theme }}
-                        />
-                        {dataWifi.use_tr069 ? <Text style={{ ...theme }}>tr069</Text> : 'Firmware'}
+            <ScrollView>
+                <View style={{ paddingHorizontal: 15, gap: 6 }}>
+                    <View style={{ ...theme, padding: 10, borderRadius: 15 }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
+                            <Text style={{ ...theme }}>{getStatus()} </Text>
+                            <MaterialCommunityIcons
+                                name='lock'
+                                size={24}
+                                style={{ ...theme }}
+                            />
+                            {dataWifi.use_tr069 ? <Text style={{ ...theme }}>tr069</Text> : 'Firmware'}
+                        </View>
+                        <View>
+                            <Text style={{ ...theme, fontWeight: 'bold', }}>Modelo</Text>
+                            <Text style={{ ...theme, }}>{dataWifi.model}</Text>
+                        </View>
+
+                        <View style={{ ...theme, marginTop: 15, flexDirection: 'row', gap: 3 }}>
+                            <Text style={{ ...theme, fontWeight: 'bold', }}>PPPOE</Text>
+                        </View>
+                        <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.pppoe_user}</Text>
+                        <View style={{ ...theme, marginTop: 15, flexDirection: 'row', gap: 3 }}>
+                            <Text style={{ ...theme, fontWeight: 'bold', }}>PPPOE Password</Text>
+                        </View>
+                        <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.pppoe_password}</Text>
                     </View>
+
+                    <View style={{ ...theme, padding: 10, borderRadius: 15 }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+                            <MaterialCommunityIcons name='wifi' color='#4CB752' size={24} />
+                            <Text style={{ ...theme, fontWeight: 'bold' }}>2.4Ghz Network</Text>
+                        </View>
+                        <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.wifi_ssid}</Text>
+                        <Text style={{ ...theme, fontWeight: 'bold' }}>Password</Text>
+                        <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.wifi_password}</Text>
+
+                        <View style={{ borderTopWidth: 0.5, marginTop: 15, ...theme }} />
+
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, gap: 3 }}>
+                            <MaterialCommunityIcons name='wifi' color='#4CB752' size={24} />
+                            <Text style={{ ...theme, fontWeight: 'bold' }}>5Ghz Network</Text>
+                        </View>
+                        <View>
+                            <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.wifi_ssid_5ghz}</Text>
+                            <Text style={{ ...theme, fontWeight: 'bold' }}>Password_5</Text>
+                            <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.wifi_password_5ghz}</Text>
+                        </View>
+                    </View>
+
                     <View>
-                        <Text style={{ ...theme, fontWeight: 'bold', fontSize: 20, }}>Modelo</Text>
-                        <Text style={{ ...theme, }}>{dataWifi.model}</Text>
+                        {devices(dataWifi.lan_devices)}
                     </View>
                 </View>
 
-                <View style={{ ...theme, padding: 10, borderRadius: 15 }}>
-                    <View style={{ ...theme, marginTop: 15, flexDirection: 'row', gap: 3 }}>
-                        <TabBarIcon name='navigate' size={24} color='#4CB752' />
-                        <Text style={{ ...theme, fontSize: 20, fontWeight: 'bold', }}>PPPOE</Text>
-                    </View>
-                    <Text style={{ ...theme, fontSize: 16, marginLeft: 30 }}>{dataWifi.pppoe_user}</Text>
-                    <View style={{ ...theme, marginTop: 15, flexDirection: 'row', gap: 3 }}>
-                        <TabBarIcon name='lock-closed' size={24} color='#4CB752' />
-                        <Text style={{ ...theme, fontSize: 20, fontWeight: 'bold', }}>PPPOE Password</Text>
-                    </View>
-                    <Text style={{ ...theme, fontSize: 16, marginLeft: 30 }}>{dataWifi.pppoe_password}</Text>
+                <Text>
+                    {loading && <ActivityIndicator size="large" color="#00ff00" />}
+                </Text>
+                <View style={{ justifyContent: 'center' }}>
+                    <TouchableOpacity style={styles.button}
+                        onPress={callPostApi}
+                    >
+                        <Text style={{ fontSize: 20, fontWeight: '500' }}>Aplicar</Text>
+                    </TouchableOpacity>
                 </View>
-
-                <View style={{ ...theme, padding: 10, borderRadius: 15 }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
-                        <MaterialCommunityIcons name='wifi' color='#4CB752' size={24} />
-                        <Text style={{ ...theme, fontSize: 20, fontWeight: 'bold' }}>2.4Ghz Network</Text>
-                    </View>
-                    <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.wifi_ssid}</Text>
-                    <Text style={{ ...theme, fontSize: 20, fontWeight: 'bold' }}>Password</Text>
-                    <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.wifi_password}</Text>
-
-                    <View style={{ borderTopWidth: 0.5, marginTop: 15, ...theme }} />
-
-                    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, gap: 3 }}>
-                        <MaterialCommunityIcons name='wifi' color='#4CB752' size={24} />
-                        <Text style={{ ...theme, fontSize: 20, fontWeight: 'bold' }}>5Ghz Network</Text>
-                    </View>
-                    <View style={{ marginTop: 5 }}>
-                        <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.wifi_ssid_5ghz}</Text>
-                        <Text style={{ ...theme, fontSize: 20, fontWeight: 'bold' }}>Password_5</Text>
-                        <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.wifi_password_5ghz}</Text>
-                    </View>
-                </View>
-            </View>
-
-            <Text>
-                {loading && <ActivityIndicator size="large" color="#00ff00" />}
-            </Text>
-            <View style={{ justifyContent: 'center' }}>
-                <TouchableOpacity style={styles.button}
-                    onPress={callPostApi}
-                >
-                    <Text style={{ fontSize: 20, fontWeight: '500' }}>Aplicar</Text>
-                </TouchableOpacity>
-            </View>
-
+            </ScrollView>
         </View >
 
     )

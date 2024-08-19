@@ -6,6 +6,7 @@ import { useColorScheme } from "react-native";
 import { Text, View, TouchableOpacity, ActivityIndicator, Alert, SafeAreaView, Clipboard, TextInput } from "react-native";
 import Toast from "react-native-toast-message";
 import config from "../config";
+import { auth } from "@/constants/Auth";
 
 interface roteadorProps {
     _id: string;
@@ -57,6 +58,7 @@ export default function Remove() {
 
     const callDeleteRouter = async () => {
         setIsLoading(true)
+        const auth = await config();
         const api = await axios({
             method: "DELETE",
             url: `${auth.url_anlix}/api/v2/device/delete/${mac}`,
