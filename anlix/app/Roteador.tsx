@@ -140,14 +140,21 @@ export default function Roteador() {
 
     const devices = (device) => {
         return (
-            <View>
+            <View style={{ ...theme, borderWidth: 1, borderRadius: 15, padding: 5, marginHorizontal: 15 }}>
+                <Text style={{ ...theme, padding: 10, paddingBottom: 0, }}>Conectados</Text>
+                <Text style={{ ...theme, textAlign: 'center' }}>{device == '' && 'Nenhum dispostivo conectado!'}</Text>
                 <FlatList
+                    style={{ paddingHorizontal: 15, height: '40%' }}
                     data={device}
                     keyExtractor={(item) => item._id}
                     renderItem={({ item, index }) => (
-
-                        <Text style={{ ...theme }}>{item.dhcp_name}</Text>
-
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <Text style={{ ...theme }}>{item.dhcp_name}</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                                <Text style={{ ...theme }}>{item.ip}</Text>
+                                <MaterialCommunityIcons color={theme.color} name='signal-cellular-3' />
+                            </View>
+                        </View>
                     )}
                 />
             </View>
@@ -156,71 +163,66 @@ export default function Roteador() {
 
     return (
         <View style={{ flex: 1, padding: 5, gap: 3 }}>
-            <ScrollView>
-                <View style={{ paddingHorizontal: 15, gap: 6 }}>
-                    <View style={{ ...theme, padding: 10, borderRadius: 15 }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
-                            <Text style={{ ...theme }}>{getStatus()} </Text>
-                            <MaterialCommunityIcons
-                                name='lock'
-                                size={24}
-                                style={{ ...theme }}
-                            />
-                            {dataWifi.use_tr069 ? <Text style={{ ...theme }}>tr069</Text> : 'Firmware'}
-                        </View>
-                        <View>
-                            <Text style={{ ...theme, fontWeight: 'bold', }}>Modelo</Text>
-                            <Text style={{ ...theme, }}>{dataWifi.model}</Text>
-                        </View>
-
-                        <View style={{ ...theme, marginTop: 15, flexDirection: 'row', gap: 3 }}>
-                            <Text style={{ ...theme, fontWeight: 'bold', }}>PPPOE</Text>
-                        </View>
-                        <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.pppoe_user}</Text>
-                        <View style={{ ...theme, marginTop: 15, flexDirection: 'row', gap: 3 }}>
-                            <Text style={{ ...theme, fontWeight: 'bold', }}>PPPOE Password</Text>
-                        </View>
-                        <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.pppoe_password}</Text>
+            <View style={{ paddingHorizontal: 15, gap: 6 }}>
+                <View style={{ ...theme, padding: 10, borderWidth: 1, borderRadius: 15 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
+                        <Text style={{ ...theme }}>{getStatus()} </Text>
+                        <MaterialCommunityIcons
+                            name='lock'
+                            size={24}
+                            style={{ ...theme }}
+                        />
+                        {dataWifi.use_tr069 ? <Text style={{ ...theme }}>tr069</Text> : 'Firmware'}
                     </View>
-
-                    <View style={{ ...theme, padding: 10, borderRadius: 15 }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
-                            <MaterialCommunityIcons name='wifi' color='#4CB752' size={24} />
-                            <Text style={{ ...theme, fontWeight: 'bold' }}>2.4Ghz Network</Text>
-                        </View>
-                        <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.wifi_ssid}</Text>
-                        <Text style={{ ...theme, fontWeight: 'bold' }}>Password</Text>
-                        <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.wifi_password}</Text>
-
-                        <View style={{ borderTopWidth: 0.5, marginTop: 15, ...theme }} />
-
-                        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, gap: 3 }}>
-                            <MaterialCommunityIcons name='wifi' color='#4CB752' size={24} />
-                            <Text style={{ ...theme, fontWeight: 'bold' }}>5Ghz Network</Text>
-                        </View>
-                        <View>
-                            <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.wifi_ssid_5ghz}</Text>
-                            <Text style={{ ...theme, fontWeight: 'bold' }}>Password_5</Text>
-                            <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.wifi_password_5ghz}</Text>
-                        </View>
-                    </View>
-
                     <View>
-                        {devices(dataWifi.lan_devices)}
+                        <Text style={{ color: '#666', fontWeight: 'bold', }}>Modelo</Text>
+                        <Text style={{ ...theme, }}>{dataWifi.model}</Text>
                     </View>
+
+                    <View style={{ ...theme, marginTop: 10, flexDirection: 'row', gap: 3 }}>
+                        <Text style={{ color: '#666', fontWeight: 'bold', }}>PPPOE</Text>
+                    </View>
+                    <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.pppoe_user}</Text>
+                    <View style={{ ...theme, marginTop: 10, flexDirection: 'row', gap: 3 }}>
+                        <Text style={{ color: '#666', fontWeight: 'bold', }}>PPPOE Password</Text>
+                    </View>
+                    <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.pppoe_password}</Text>
                 </View>
 
-                <Text>
-                    {loading && <ActivityIndicator size="large" color="#00ff00" />}
-                </Text>
+                <View style={{ ...theme, padding: 10, borderWidth: 1, borderRadius: 15 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+                        <MaterialCommunityIcons name='wifi' color='#666' size={24} />
+                        <Text style={{ ...theme, fontWeight: 'bold' }}>2.4Ghz Network</Text>
+                    </View>
+                    <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.wifi_ssid}</Text>
+
+                    <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.wifi_password}</Text>
+
+                    <View style={{ borderTopWidth: 0.5, marginTop: 10, ...theme }} />
+
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10, gap: 3 }}>
+                        <MaterialCommunityIcons name='wifi' color='#666' size={24} />
+                        <Text style={{ ...theme, fontWeight: 'bold' }}>5Ghz Network</Text>
+                    </View>
+                    <View>
+                        <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.wifi_ssid_5ghz}</Text>
+
+                        <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.wifi_password_5ghz}</Text>
+                    </View>
+                </View>
+            </View>
+
+            <View>
+                {devices(dataWifi.lan_devices)}
                 <View style={{ justifyContent: 'center' }}>
                     <TouchableOpacity style={styles.button}
                         onPress={callPostApi}
                     >
+                        <Text>{loading && <ActivityIndicator size="large" color="#00ff00" />}</Text>
                         <Text style={{ fontSize: 20, fontWeight: '500' }}>Aplicar</Text>
                     </TouchableOpacity>
                 </View>
-            </ScrollView>
+            </View>
         </View >
 
     )
@@ -283,6 +285,7 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: '#F55265',
+        flexDirection: 'row',
         padding: 15,
         borderRadius: 10,
         justifyContent: 'center',
