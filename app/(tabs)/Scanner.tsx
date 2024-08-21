@@ -3,6 +3,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text, View, TouchableOpacity, ActivityIndicator, Alert, useColorScheme, Clipboard, RefreshControl, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth } from "@/constants/Auth";
+import config from "../config";
 
 export default function Device() {
     const [dataMac, setDataMac] = useState([]);
@@ -29,6 +30,7 @@ export default function Device() {
     const handleResetDefault = async () => {
         setIsLoading(true);
         try {
+            const auth = await config();
             const response = await fetch(`${auth.url_anlix}/api/v2/device/get`, {
                 method: 'post',
                 headers: {
@@ -58,7 +60,7 @@ export default function Device() {
     };
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
             <FlatList
                 data={resetdefaults}
                 keyExtractor={(item) => item._id}
@@ -67,7 +69,6 @@ export default function Device() {
                         key={item._id}
                         style={{
                             ...theme,
-                            marginTop: 4,
                             alignItems: 'center',
                             justifyContent: 'space-between',
                             flexDirection: "row",
@@ -123,14 +124,14 @@ export default function Device() {
                     <RefreshControl
                         refreshing={refreshing}
                         onRefresh={handleRefresh}
-                        colors={['#1E90FF']} // Cor do indicador de atualização
-                        tintColor={'#1E90FF'} // Cor de fundo do indicador de atualização no iOS
+                        colors={['#1E90FF']}
+                        tintColor={'#1E90FF'}
                     />
                 }
                 ListEmptyComponent={
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                         {isLoading ? (
-                            <ActivityIndicator style={{ marginTop: '80%' }} size="large" color="#fff" />
+                            <ActivityIndicator style={{ marginTop: 5 }} size="large" color="#fff" />
                         ) : (
                             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                                 <Text style={{ ...theme, backgroundColor: 'transparent', marginTop: 250, fontSize: 18 }}>Nenhum registro</Text>

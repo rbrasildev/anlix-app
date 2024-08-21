@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import { View, Text, Alert, TextInput, TouchableOpacity, KeyboardAvoidingView, ActivityIndicator, useColorScheme } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, ActivityIndicator, useColorScheme } from "react-native";
 import { useRouter } from 'expo-router';
 import { StyleSheet } from "react-native";
-import { auth } from "@/constants/Auth";
-
+import config from "../config";
+import Toast from "react-native-toast-message";
+import Input from "@/components/Input";
 
 export default function Apply() {
     const [pppoe, setPppoe] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+
 
     const router = useRouter()
     const scheme = useColorScheme();
@@ -26,32 +28,36 @@ export default function Apply() {
 
     const theme = scheme === 'light' ? lightTheme : darkTheme;
 
+
     const getDataSgp = async () => {
         try {
             setIsLoading(true);
-            const response = await fetch(`${auth.url_sgp}/api/api.php?login=${pppoe}`).then((response) => response.json())
-            console.log(response)
+
+            const auth = await config();
+
+            const response = await fetch(`${auth.url_sgp}/api.php?login=${pppoe}`).then((response) => response.json())
+
 
             if (pppoe === "") {
-                Alert.alert(
-                    "Atenção",
-                    "Este campo não pode ser vazio verme!",
-                );
+                Toast.show({
+                    type: 'info',
+                    text1: 'Este campo não pode ser vazio seu verme!'
+                })
                 setIsLoading(false);
                 return;
             }
 
             if (!response.login) {
-                Alert.alert(
-                    "Falha ao buscar dados",
-                    "Cliente não encontrado!",
-                );
+                Toast.show({
+                    type: 'error',
+                    text1: 'Cliente não encontrado'
+                })
                 setIsLoading(false);
                 return;
             }
 
             router.push({
-                pathname: "Cliente",
+                pathname: "/Cliente",
                 params: { cpf: pppoe }
             });
 
@@ -59,7 +65,10 @@ export default function Apply() {
         } catch (error) {
             console.log(error);
             setIsLoading(false);
-            Alert.alert("Erro", "Ocorreu um erro ao buscar os dados.");
+            Toast.show({
+                type: 'error',
+                text1: 'Ocorreu um erro ao buscar os dados'
+            })
         }
     }
 
@@ -68,26 +77,15 @@ export default function Apply() {
             <KeyboardAvoidingView behavior="position" enabled>
                 <Text style={{ fontSize: 32, color: '#4CB752' }}>Anlix apply</Text>
 
-                <Text style={{ fontSize: 20, color: "#d0d0d0", fontWeight: 'bold' }}>PPPoE</Text>
-                <TextInput
-                    style={{
-                        ...theme,
-                        height: 60,
-                        borderRadius: 10,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginTop: 10,
-                        marginBottom: 10,
-                        paddingLeft: 20,
-                        fontSize: 20,
-                        borderWidth: 1,
-                    }}
+                <Text style={{ fontSize: 20, color: theme.textColor, fontWeight: 'bold' }}>PPPoE</Text>
+                <Input
                     placeholderTextColor="#87949D"
                     placeholder="Digite login pppoe"
                     value={pppoe}
                     onChangeText={setPppoe}
                     autoCapitalize={"none"}
                 />
+
                 <TouchableOpacity style={styles.button} onPress={getDataSgp}>
                     <Text style={{ fontSize: 20, fontWeight: 'medium' }}>Enviar</Text>
                     <View style={{ marginLeft: 10 }}>

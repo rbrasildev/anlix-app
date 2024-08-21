@@ -1,9 +1,12 @@
 import { View, Text, TouchableOpacity, TextInput, useColorScheme, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from "react";
-import { Alert } from "react-native";
+
 import { useRouter } from "expo-router";
-import { auth } from "@/constants/Auth";
+
+import Toast from "react-native-toast-message";
+import config from "../config";
+import Input from "@/components/Input";
 
 export default function App() {
 
@@ -11,41 +14,57 @@ export default function App() {
     const router = useRouter();
 
     const scheme = useColorScheme();
+
     const lightTheme = {
-        backgroundColor: '#fff',
         textColor: '#000',
+        borderColor: '#ccc',
+        color: '#333',
+        backgroundColor: '#fff',
     };
 
     const darkTheme = {
-        backgroundColor: '#121212',
         textColor: '#fff',
-        color: '#666'
+        color: '#87949D',
+        borderColor: '#212121',
+        backgroundColor: '#141414'
     };
 
     const theme = scheme === 'light' ? lightTheme : darkTheme;
 
     async function navigateToCto() {
-        const data = await fetch(`${auth.url_sgp}/api/api.php?cto=${ctoIdent}`).then((response) => response.json())
-        if (ctoIdent == '') {
-            Alert.alert(
-                "Atenção",
-                "Este campo não pode ser vazio verme!",
-            )
-            return
-        }
-        if (data.status == 404) {
-            Alert.alert('Error 404', data.message);
-            return
-        } else {
-            router.push({
-                pathname: 'CtoInfo',
-                params: {
-                    ctoIdent: ctoIdent,
-                },
+        try {
+            const auth = await config();
+
+            const data = await fetch(`${auth.url_sgp}/api.php?cto=${ctoIdent}`).then((response) => response.json())
+            if (ctoIdent == '') {
+                Toast.show({
+                    type: 'info',
+                    text1: 'Este campo não pode ser vazio seu verme!'
+                })
+                return
+            }
+            if (data.status == 404) {
+                Toast.show({
+                    type: 'error',
+                    text1: data.message
+                });
+                return
+            } else {
+                router.push({
+                    pathname: '/CtoInfo',
+                    params: {
+                        ctoIdent: ctoIdent,
+                    },
+                })
+            }
+        } catch (erro) {
+            Toast.show({
+                type: 'error',
+                text1: 'Erro inesperado'
             })
         }
-    }
 
+    }
 
     return (
         <View style={styles.container}>
@@ -56,28 +75,19 @@ export default function App() {
                         color="#666"
                         size={30}
                     />
-                    <Text style={{ color: "#666" }}>Digite número da CTO</Text>
+                    <Text style={{ color: theme.textColor, fontSize:16 }}>Digite número da CTO</Text>
                 </View>
-                <TextInput
+                <Input
                     placeholder="EX: XX-XX-0000"
                     placeholderTextColor="#666"
                     value={ctoIdent}
+                    autoCapitalize="characters"
                     onChangeText={setCtoIdent}
-                    style={{
-                        ...theme,
-                        height: 60,
-                        borderRadius: 10,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginTop: 10,
-                        marginBottom: 10,
-                        paddingLeft: 20,
-                        fontSize: 20,
-                    }} />
+                />
                 <TouchableOpacity
                     onPress={navigateToCto}
                     style={styles.button}>
-                    <Text style={{ fontSize: 20 }}>Buscar</Text>
+                    <Text style={{ fontSize: 20, fontWeight: '400' }}>Buscar</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -87,34 +97,18 @@ export default function App() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // backgroundColor: '#131314',
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 10,
+        padding: 15,
 
-    },
-    input: {
-        backgroundColor: '#87949D',
-        borderColor: '#87949D',
-        color: '#666',
-        borderWidth: 1,
-        height: 60,
-        borderRadius: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 10,
-        marginBottom: 10,
-        paddingLeft: 20,
-        fontSize: 20,
     },
     button: {
         backgroundColor: '#4CB752',
         height: 60,
-        borderRadius: 10,
+        fontWeight: '500',
+        borderRadius: 15,
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 30,
-        fontWeight: 'bold',
         color: '#ccc'
     },
 });

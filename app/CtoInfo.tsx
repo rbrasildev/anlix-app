@@ -3,7 +3,8 @@ import { View, Text, FlatList, RefreshControl, useColorScheme } from "react-nati
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StatusOnline } from "./StatusOnline";
 import { useGlobalSearchParams } from "expo-router";
-import { auth } from "@/constants/Auth";
+
+import config from "./config";
 
 export default function Cto() {
     const [data, setData] = useState()
@@ -13,15 +14,17 @@ export default function Cto() {
     const scheme = useColorScheme();
 
     const lightTheme = {
-        backgroundColor: '#fff',
         textColor: '#000',
-        borderColor: '#333',
+        borderColor: '#ddd',
+        color: '#333',
+        backgroundColor: '#fff',
     };
 
     const darkTheme = {
-        backgroundColor: '#121212',
         textColor: '#fff',
-        color: '#87949D',
+        color: '#666',
+        borderColor: '#212121',
+        backgroundColor: '#141414'
     };
 
     const theme = scheme === 'light' ? lightTheme : darkTheme;
@@ -37,7 +40,8 @@ export default function Cto() {
     };
 
     const handleCto = async () => {
-        const data = await fetch(`${auth.url_sgp}/api/api.php?cto=${ctoIdent}`).then((response) => response.json())
+        const auth = await config();
+        const data = await fetch(`${auth.url_sgp}/api.php?cto=${ctoIdent}`).then((response) => response.json())
         setData(data)
         setTotalClientes(data.length)
     }
@@ -46,9 +50,9 @@ export default function Cto() {
     }, [])
 
     return (
-        <View style={{ ...theme, flex: 1 }}>
+        <View style={{ flex: 3, padding: 10 }}>
             <FlatList
-                style={{ ...theme, padding: 5 }}
+                style={{ padding: 5 }}
                 data={data}
                 refreshControl={
                     <RefreshControl
@@ -59,37 +63,95 @@ export default function Cto() {
                     />
                 }
                 ListHeaderComponent={
-                    <>
-                        <View style={{ marginBottom: 15, marginTop: -10, flexDirection: 'row', alignItems: 'center', paddingTop: 20 }}>
+                    <View style={{ padding: 15, borderRadius: 15 }}>
+                        <View style={{ marginBottom: 3, flexDirection: 'row', alignItems: 'center' }}>
                             <MaterialCommunityIcons
                                 name="package"
                                 size={32}
-                                color='#B8001C'
+                                style={{ color: theme.color }}
                             />
                             <Text style={{ color: '#666', fontSize: 24, }}>{ctoIdent}</Text>
                         </View>
-                        <View style={{ flexDirection: 'row', marginBottom: 10, gap: 10 }}>
-                            <View style={{ alignItems: 'center', justifyContent: 'center', borderRadius: 20, color: '#131314' }}>
+                        <View style={{ flexDirection: 'row', gap: 10 }}>
+                            <View style={{ alignItems: 'center', justifyContent: 'center', borderRadius: 20 }}>
                                 <Text style={{ color: '#666', fontSize: 16, fontWeight: 'bold' }}><MaterialCommunityIcons size={16} name="image-filter-frames" /> Ocupadas ({totalClientes})</Text>
                             </View>
-                            <View style={{ alignItems: 'center', justifyContent: 'center', borderRadius: 20, color: '#131314' }}>
+                            <View style={{ alignItems: 'center', justifyContent: 'center', borderRadius: 20 }}>
                                 <Text style={{ color: '#666', fontSize: 16, fontWeight: 'bold' }}><MaterialCommunityIcons size={16} name="image-filter-frames" /> Livres ({16 - totalClientes})</Text>
                             </View>
                         </View>
-                    </>
+                    </View>
                 }
                 renderItem={({ item }) => (
-                    <View style={{ ...theme, borderRadius: 10, padding: 10, backgroundColor: item.status == 3 ? '#590202' : item.status == 4 ? '#F28705' : '#1E1F20', margin: 5 }}>
+                    <View
+                        style={{
+                            ...theme,
+                            borderRadius: 15,
+                            padding: 10,
+                            borderWidth: 0.5,
+                            marginBottom: 4
+                        }}>
                         <View>
-                            <Text style={{ color: '#ccc', fontWeight: "700", marginBottom: 4 }}>{item.nome}</Text>
-                            <Text style={{ color: '#666', paddingLeft: 5 }}>{`${item.login} - ${item.status == 3 ? 'Cancelado' : item.status == 4 ? 'Suspenso' : 'Ativo'}`} </Text>
-                            <View style={{ gap: 10, marginVertical: 4, borderRadius: 3, padding: 5, alignItems: 'flex-start', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <View style={{ color: '#ccc', fontSize: 16, flexDirection: 'row', gap: 10, alignItems: 'center' }}>
-                                    <MaterialCommunityIcons style={{ color: '#ccc' }} name="image-filter-frames" size={20} />
-                                    <Text style={{ color: '#CCC', fontSize: 20 }}>{item.splitter_port}</Text>
+                            <Text
+                                style={{
+                                    color: theme.color,
+                                    fontWeight: "700",
+                                    marginBottom: 4,
+                                    fontSize: 18,
+                                }}>
+                                {item.nome}
+                            </Text>
+
+                            <Text style={{
+                                color: theme.color,
+                                paddingLeft: 5,
+                                color: item.status == 3 ? '#E3371E' : item.status == 4 ? '#F2AE30' : '#666'
+                            }}>
+                                {`${item.login} - ${item.status == 3 ? 'Cancelado' : item.status == 4 ? 'Suspenso' : 'Ativo'}`}
+                            </Text>
+                            <View
+                                style={{
+                                    gap: 10,
+                                    marginVertical: 4,
+                                    borderRadius: 3,
+                                    padding: 5,
+                                    alignItems: 'flex-start',
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between'
+                                }}>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        gap: 10, alignItems: 'center'
+                                    }}>
+                                    <MaterialCommunityIcons style={{
+                                        color: theme.color
+                                    }}
+                                        name="image-filter-frames"
+                                        size={20}
+                                    />
+                                    <Text
+                                        style={{
+                                            color: theme.color,
+                                            fontSize: 20,
+                                        }}>
+                                        {item.splitter_port}
+                                    </Text>
                                 </View>
-                                <View style={{ color: '#ccc', fontSize: 16, flexDirection: 'row', gap: 10, alignItems: 'center' }}>
-                                    <Text style={{ color: '#CCC', fontSize: 20 }}>{item.wifi_ssid_5}</Text>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        gap: 10,
+                                        alignItems: 'center',
+
+                                    }}>
+                                    <Text
+                                        style={{
+                                            fontSize: 16,
+                                            color: theme.color,
+                                        }}>
+                                        {item.wifi_ssid_5}
+                                    </Text>
                                     <StatusOnline isOnline={item.login} />
                                 </View>
                             </View>

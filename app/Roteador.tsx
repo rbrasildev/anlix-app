@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobalSearchParams } from 'expo-router';
-
-import { StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Text, Alert, View, TouchableOpacity, ActivityIndicator, useColorScheme } from 'react-native';
-import { auth } from '@/constants/Auth';
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
+import { Text, View, TouchableOpacity, ActivityIndicator, useColorScheme, StyleSheet, FlatList, ScrollView } from 'react-native';
+
+import Toast from 'react-native-toast-message';
+import config from './config';
+
+
 
 interface RoteadorProps {
     online_status: boolean;
@@ -18,33 +19,37 @@ interface RoteadorProps {
     wifi_ssid_5ghz: string;
     wifi_password: string;
     wifi_password_5ghz: string;
+    lan_devices: [];
 }
 
 export default function Roteador() {
     const [loading, setLoading] = useState(true)
-    const [dataWifi, setDataWifi] = useState<RoteadorProps>({});
+    const [dataWifi, setDataWifi] = useState<RoteadorProps>([]);
 
 
     const params = useGlobalSearchParams()
 
     const scheme = useColorScheme();
+
     const lightTheme = {
         textColor: '#000',
-        color: '#141414',
-        backgroundColor: '#f9f9f9'
+        borderColor: '#ccc',
+        color: '#333',
+        backgroundColor: '#fff',
     };
 
     const darkTheme = {
         textColor: '#fff',
-        color: '#fff',
-        backgroundColor: '#212121'
+        color: '#87949D',
+        borderColor: '#212121',
+        backgroundColor: '#141414'
     };
 
     const theme = scheme === 'light' ? lightTheme : darkTheme;
 
 
-
     const callGetApi = async () => {
+        const auth = await config();
         try {
             const response = await fetch(`${auth.url_anlix}/api/v2/device/update/${params.mac}`,
                 {
@@ -74,6 +79,7 @@ export default function Roteador() {
 
     //criar wifi
     const callPostApi = async () => {
+        const auth = await config();
         const response = await fetch(`${auth.url_anlix}/api/v2/device/update/${params.mac}`, {
             method: 'PUT',
             headers: {
@@ -95,32 +101,34 @@ export default function Roteador() {
 
         }).catch(error => {
             if (error.response.status == 500) {
-                Alert.alert(
-                    error.message,
-                    "Erro ao atualizar o Roteador, Favor pedir para as meninas tirar a porra dos caracteres especiais. Tente novamente!",
-                )
+                Toast.show({
+                    type: 'error',
+                    text1: 'Erro ao atualizar o Roteador, Favor pedir para as meninas tirar a porra dos caracteres especiais. Tente novamente!',
+                })
+
             }
             if (error.response.status == 404) {
-                Alert.alert(
-                    error.message,
-                    "Falha ao conectar com o servidor"
-                );
+                Toast.show({
+                    type: 'error',
+                    text1: error.message + "Falha ao conectar com o servidor",
+                })
+
             }
             if (error.code == "ERR_NETWORK") {
-                Alert.alert(
-                    "Erro",
-                    error.message
-                )
+                Toast.show({
+                    type: 'error',
+                    text1: error.message,
+                })
             }
             console.log(error)
             return;
         })
 
         if (response.status == 200) {
-            Alert.alert(
-                'Successo',
-                "Configuração aplicada com sucesso!"
-            )
+            Toast.show({
+                type: 'success',
+                text1: "Configuração aplicada com sucesso!"
+            })
         }
 
     }
@@ -131,70 +139,91 @@ export default function Roteador() {
 
     if (loading) { return <ActivityIndicator size="large" color="#fff" /> }
 
+    const devices = (device) => {
+        return (
+            <View style={{ ...theme, borderWidth: 1, borderRadius: 15, padding: 5, marginHorizontal: 15 }}>
+                <Text style={{ ...theme, padding: 10, paddingBottom: 0, }}>Conectados</Text>
+                <Text style={{ ...theme, textAlign: 'center' }}>{device == '' && 'Nenhum dispostivo conectado!'}</Text>
+                <FlatList
+                    style={{ paddingHorizontal: 15, height: '40%' }}
+                    data={device}
+                    keyExtractor={(item) => item._id}
+                    renderItem={({ item, index }) => (
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <Text style={{ ...theme }}>{item.dhcp_name}</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                                <Text style={{ ...theme }}>{item.ip}</Text>
+                                <MaterialCommunityIcons color={theme.color} name='signal-cellular-3' />
+                            </View>
+                        </View>
+                    )}
+                />
+            </View>
+        )
+    }
+
     return (
         <View style={{ flex: 1, padding: 5, gap: 3 }}>
-            <View style={{ paddingHorizontal: 15, gap: 3 }}>
-                <View style={{ ...theme, padding: 10, borderRadius: 10 }}>
+            <View style={{ paddingHorizontal: 15, gap: 6 }}>
+                <View style={{ ...theme, padding: 10, borderWidth: 1, borderRadius: 15 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
-                        <Text style={{ ...theme, fontSize: 22 }}>{getStatus()} </Text>
+                        <Text style={{ ...theme }}>{getStatus()} </Text>
                         <MaterialCommunityIcons
                             name='lock'
                             size={24}
                             style={{ ...theme }}
                         />
-                        {dataWifi.use_tr069 ? <Text style={{ ...theme }}>tr069</Text> : 'Firmware'}
+                        {dataWifi.use_tr069 ? <Text style={{ color: theme.color }}>tr069</Text> : 'Firmware'}
                     </View>
                     <View>
-                        <Text style={{ ...theme, fontWeight: 'bold', fontSize: 20, }}>Modelo</Text>
+                        <Text style={{ color: '#666', fontWeight: 'bold', }}>Modelo</Text>
                         <Text style={{ ...theme, }}>{dataWifi.model}</Text>
                     </View>
+
+                    <View style={{ ...theme, marginTop: 10, flexDirection: 'row', gap: 3 }}>
+                        <Text style={{ color: '#666', fontWeight: 'bold', }}>PPPOE</Text>
+                    </View>
+                    <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.pppoe_user}</Text>
+                    <View style={{ ...theme, marginTop: 10, flexDirection: 'row', gap: 3 }}>
+                        <Text style={{ color: '#666', fontWeight: 'bold', }}>PPPOE Password</Text>
+                    </View>
+                    <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.pppoe_password}</Text>
                 </View>
 
-                <View style={{ ...theme, padding: 10, borderRadius: 10 }}>
-                    <View style={{ ...theme, marginTop: 15, flexDirection: 'row', gap: 3 }}>
-                        <TabBarIcon name='navigate' size={20} style={{ ...theme }} />
-                        <Text style={{ ...theme, fontSize: 20, fontWeight: 'bold', }}>PPPoE_User</Text>
-                    </View>
-                    <Text style={{ ...theme, fontSize: 16, marginLeft: 30 }}>{dataWifi.pppoe_user}</Text>
-                    <View style={{ ...theme, marginTop: 15, flexDirection: 'row', gap: 3 }}>
-                        <TabBarIcon name='lock-closed' size={20} style={{ ...theme }} />
-                        <Text style={{ ...theme, fontSize: 20, fontWeight: 'bold', }}>PPPoE_User</Text>
-                    </View>
-                    <Text style={{ ...theme, fontSize: 16, marginLeft: 30 }}>{dataWifi.pppoe_password}</Text>
-                </View>
-
-                <View style={{ ...theme, padding: 10, borderRadius: 10 }}>
+                <View style={{ ...theme, padding: 10, borderWidth: 1, borderRadius: 15 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
-                        <TabBarIcon name='wifi' size={20} style={{ ...theme }} />
-                        <Text style={{ ...theme, fontSize: 20, fontWeight: 'bold' }}>SSID</Text>
+                        <MaterialCommunityIcons name='wifi' color='#666' size={24} />
+                        <Text style={{ ...theme, fontWeight: 'bold' }}>2.4Ghz Network</Text>
                     </View>
                     <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.wifi_ssid}</Text>
-                    <Text style={{ ...theme, fontSize: 20, fontWeight: 'bold' }}>Password</Text>
+
                     <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.wifi_password}</Text>
 
-                    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, gap: 3 }}>
-                        <TabBarIcon name='wifi' size={20} style={{ ...theme }} />
-                        <Text style={{ ...theme, fontSize: 20, fontWeight: 'bold' }}>SSID 5Ghz</Text>
+                    <View style={{ borderTopWidth: 0.5, marginTop: 10, ...theme }} />
+
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10, gap: 3 }}>
+                        <MaterialCommunityIcons name='wifi' color='#666' size={24} />
+                        <Text style={{ ...theme, fontWeight: 'bold' }}>5Ghz Network</Text>
                     </View>
-                    <View style={{ marginTop: 5 }}>
+                    <View>
                         <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.wifi_ssid_5ghz}</Text>
-                        <Text style={{ ...theme, fontSize: 20, fontWeight: 'bold' }}>Password_5</Text>
+
                         <Text style={{ ...theme, fontSize: 16 }}>{dataWifi.wifi_password_5ghz}</Text>
                     </View>
                 </View>
             </View>
 
-            <Text>
-                {loading && <ActivityIndicator size="large" color="#00ff00" />}
-            </Text>
-            <View style={{ justifyContent: 'center' }}>
-                <TouchableOpacity style={styles.button}
-                    onPress={callPostApi}
-                >
-                    <Text style={{ fontSize: 20, fontWeight: '500' }}>Aplicar</Text>
-                </TouchableOpacity>
+            <View>
+                {devices(dataWifi.lan_devices)}
+                <View style={{ justifyContent: 'center' }}>
+                    <TouchableOpacity style={styles.button}
+                        onPress={callPostApi}
+                    >
+                        <Text>{loading && <ActivityIndicator size="large" color="#00ff00" />}</Text>
+                        <Text style={{ fontSize: 20, fontWeight: '500' }}>Aplicar</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-
         </View >
 
     )
@@ -231,7 +260,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         justifyContent: 'center',
         backgroundColor: '#1e1f20',
-        borderRadius: 10,
+        borderRadius: 15,
         color: '#FFF',
         fontSize: 30,
         width: "90%"
@@ -257,6 +286,7 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: '#F55265',
+        flexDirection: 'row',
         padding: 15,
         borderRadius: 10,
         justifyContent: 'center',

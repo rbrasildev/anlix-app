@@ -1,133 +1,116 @@
-import React, { useState } from "react";
-import { View, Text, Alert, TextInput, TouchableOpacity, KeyboardAvoidingView, ActivityIndicator, useColorScheme } from "react-native";
-import { useRouter } from 'expo-router';
-import { StyleSheet } from "react-native";
-import { auth } from "@/constants/Auth";
+import React, { useEffect, useState } from "react";
+import { View, Text, useColorScheme, ScrollView, ActivityIndicator } from "react-native";
+
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import config from "../config";
+import { router } from "expo-router";
+
+
+interface DeviceProps {
+    model: String;
+    use_tr069: boolean
+}
 
 
 export default function HomeScreen() {
-    const [pppoe, setPppoe] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
+    const [models, setModels] = useState<DeviceProps[]>([])
+    const [dataMac, setDataMac] = useState([]);
+    const [isLoading, setIsLoading] = useState(false)
 
-    const router = useRouter()
     const scheme = useColorScheme();
 
     const lightTheme = {
         backgroundColor: '#fff',
-        textColor: '#000',
+        textColor: '#333',
+        color: '#333',
         borderColor: '#ccc',
     };
 
     const darkTheme = {
         textColor: '#fff',
-        color: '#87949D',
-        borderColor: '#333',
+        color: '#ccc',
+        borderColor: '#ccc',
     };
 
     const theme = scheme === 'light' ? lightTheme : darkTheme;
 
-    const getDataSgp = async () => {
+
+    const handleAnlix = async () => {
+        setIsLoading(true)
         try {
-            setIsLoading(true);
-            const response = await fetch(`${auth.url_sgp}/api/api.php?login=${pppoe}`).then((response) => response.json())
-            console.log(response)
-
-            if (pppoe === "") {
-                Alert.alert(
-                    "Atenção",
-                    "Este campo não pode ser vazio verme!",
-                );
-                setIsLoading(false);
+            const auth = await config()
+            if (!auth) {
+                router.push({ pathname: '/settings' })
                 return;
             }
+            const response: DeviceProps[] = await fetch(`${auth.url_anlix}/api/v2/device/get`, {
 
-            if (!response.login) {
-                Alert.alert(
-                    "Falha ao buscar dados",
-                    "Cliente não encontrado!",
-                );
-                setIsLoading(false);
-                return;
-            }
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Basic ' + btoa(auth.username + ':' + auth.password)
+                },
+                body: JSON.stringify({ "fields": "model,use_tr069" })
+            }).then((response) => response.json())
+            // Extraindo modelos únicos
+            const uniqueModels: String[] = [...new Set(response.map((item: DeviceProps) => item.model))];
 
-            router.push({
-                pathname: "Cliente",
-                params: { cpf: pppoe }
-            });
+            setModels(uniqueModels);
+            setDataMac(response)
 
-            setIsLoading(false);
         } catch (error) {
-            console.log(error);
-            setIsLoading(false);
-            Alert.alert("Erro", "Ocorreu um erro ao buscar os dados.");
+            console.log(error)
+        } finally {
+            setIsLoading(false)
         }
     }
 
-    return (
-        <View style={styles.container}>
-            <KeyboardAvoidingView behavior="position" enabled>
-                <Text style={{ fontSize: 32, color: '#4CB752' }}>Anlix apply</Text>
+    useEffect(() => {
+        handleAnlix()
+    }, [])
 
-                <Text style={{ fontSize: 20, color: "#d0d0d0", fontWeight: 'bold' }}>PPPoE</Text>
-                <TextInput
-                    style={{
-                        ...theme,
-                        height: 60,
-                        borderRadius: 10,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginTop: 10,
-                        marginBottom: 10,
-                        paddingLeft: 20,
-                        fontSize: 20,
-                        borderWidth: 1,
-                    }}
-                    placeholderTextColor="#87949D"
-                    placeholder="Digite login pppoe"
-                    value={pppoe}
-                    onChangeText={setPppoe}
-                    autoCapitalize={"none"}
-                />
-                <TouchableOpacity style={styles.button} onPress={getDataSgp}>
-                    <Text style={{ fontSize: 20, fontWeight: 'medium' }}>Enviar</Text>
-                    <View style={{ marginLeft: 10 }}>
-                        {isLoading && <ActivityIndicator size="small" color="#fff" />}
-                    </View>
-                </TouchableOpacity>
-            </KeyboardAvoidingView>
+    const renderDeviceCard = (model: string) => (
+        <View key={model} style={{ ...theme, borderWidth: 1, padding: 20, margin: 10, borderRadius: 15 }}>
+            <View style={{ flexDirection: 'row', gap: 3 }}>
+                <MaterialCommunityIcons style={{ ...theme }} name="router-wireless" size={18} />
+                <Text style={{ ...theme, maxWidth: '85%' }}>{model}</Text>
+            </View>
+            <Text style={{ ...theme, fontSize: 36, fontWeight: 'bold' }}>{dataMac.filter(item => item.model === model).length}</Text>
         </View>
+
+    );
+
+    if (isLoading) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator color={theme.color} size={48} />
+            </View>
+        )
+    }
+
+    return (
+        <ScrollView>
+            <View style={{ flex: 1, flexDirection: 'row', gap: 3, padding: 15, justifyContent: 'center' }}>
+                <View style={{ width: '50%', height: '100%', borderRadius: 15, }}>
+                    <View style={{ ...theme, borderWidth: 0.5, padding: 20, margin: 10, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+                            <MaterialCommunityIcons style={{ ...theme }} size={22} name="access-point" />
+                            <Text style={{ ...theme, fontSize: 18 }}>Total </Text>
+                        </View>
+                        <View style={{ ...theme, borderWidth: 10, width: 130, height: 130, justifyContent: 'center', alignItems: 'center', borderRadius: 65, marginTop: 10, borderColor: '#4CB752' }}>
+                            <Text style={{ ...theme, fontSize: 32, fontWeight: '700' }}>{dataMac.length}</Text>
+                        </View>
+                    </View>
+                    {models.map((model, key) => (key <= 2 && renderDeviceCard(model)))}
+                </View>
+
+                <View style={{ width: '50%', height: '100%', borderRadius: 15, padding: 15 }}>
+                    {models.map((model, key) => (key > 2 && renderDeviceCard(model)))}
+                </View>
+
+            </View >
+        </ScrollView>
     )
 }
 
 
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 20,
-        // backgroundColor: '#131314',
-        justifyContent: 'center',
-    },
-    input: {
-        backgroundColor: '#1E1F20',
-        height: 60,
-        borderRadius: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 10,
-        marginBottom: 10,
-        paddingLeft: 20,
-        fontSize: 20,
-        color: '#87949D',
-    },
-    button: {
-        backgroundColor: '#4CB752',
-        height: 60,
-        borderRadius: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 30,
-        flexDirection: 'row',
-        gap: 3,
-    }
-})
