@@ -7,6 +7,7 @@ import { Text, View, TouchableOpacity, ActivityIndicator, Alert, SafeAreaView, C
 import Toast from "react-native-toast-message";
 import config from "../config";
 import { auth } from "@/constants/Auth";
+import getDeviceData from "../services/getDeviceData";
 
 interface roteadorProps {
     _id: string;
@@ -36,25 +37,17 @@ export default function Remove() {
 
 
     const callPostApi = async () => {
-        const auth = await config();
-        const api = await axios({
-            method: "POST",
-            url: `${auth.url_anlix}/api/v2/device/get/`,
-            auth: {
-                username: auth.username,
-                password: auth.password
-            },
-            data: {
-                "fields": "_id,pppoe_user,model,use_tr069"
-
-            }
-        }).catch(error => {
+        setIsLoading(true)
+        try {
+            const response = await getDeviceData()
+            setDataMac(response)
+            setIsLoading(false);
+        } catch (error) {
             console.log(error)
-            return;
-        })
-        setDataMac(api.data)
-        setIsLoading(false);
+        }
+
     }
+
 
     const callDeleteRouter = async () => {
         setIsLoading(true)

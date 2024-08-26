@@ -27,7 +27,8 @@ export default function Input({ ...rest }: TextInputProps) {
             justifyContent: 'center',
             alignItems: 'center',
             marginVertical:5,
-            padding:15,
+            paddingHorizontal:15,
+            padding:10,
             fontSize: 18,
             borderWidth: 1,
         }}  {...rest} />

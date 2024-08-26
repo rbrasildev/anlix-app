@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text, View, TouchableOpacity, ActivityIndicator, Alert, useColorScheme, Clipboard, RefreshControl, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { auth } from "@/constants/Auth";
+
 import config from "../config";
+import getDeviceData from "../services/getDeviceData";
 
 export default function Device() {
     const [dataMac, setDataMac] = useState([]);
@@ -30,15 +31,7 @@ export default function Device() {
     const handleResetDefault = async () => {
         setIsLoading(true);
         try {
-            const auth = await config();
-            const response = await fetch(`${auth.url_anlix}/api/v2/device/get`, {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Basic ' + btoa(auth.username + ':' + auth.password)
-                },
-                body: JSON.stringify({ "fields": "_id,pppoe_user,model,use_tr069" })
-            }).then((response) => response.json())
+            const response = await getDeviceData();
             setDataMac(response);
         } catch (error) {
             console.log(error)

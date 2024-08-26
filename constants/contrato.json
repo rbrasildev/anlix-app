@@ -1,0 +1,58 @@
+{
+    "contratos": [
+        {
+            "clienteId": 2255,
+            "cobIsento": 0,
+            "cobPermuta": false,
+            "contratoCentralLogin": "rairock",
+            "contratoCentralSenha": "123456",
+            "contratoId": 2319,
+            "contratoStatus": 1,
+            "contratoStatusDisplay": " Ativo ",
+            "contratoStatusModo": 2,
+            "contratoTitulosAReceber": 0,
+            "contratoValorAberto": 0,
+            "cpfCnpj": "925.339.492-72",
+            "dataAlteracao": "14/08/2024 12:45:01",
+            "dataCadastro": "20/07/2023 22:40:41",
+            "emails": [Array
+            ],
+            "endereco_bairro": "CENTRO",
+            "endereco_cep": "69151-042",
+            "endereco_cidade": "PARINTINS",
+            "endereco_complemento": null,
+            "endereco_ll": "-2.63164,-56.7358892",
+            "endereco_logradouro": "BECO TOMÁS MEIRELES",
+            "endereco_numero": 57,
+            "endereco_pontoreferencia": null,
+            "endereco_uf": "AM",
+            "link_quitacao": "https://sgptins.redeconexaonet.com/api/declaracao/quitacao/5lQ/0T5cHYoePg5I/b4122254c03df69c2edc979b63bf8eda/2024",
+            "planointernet": "PLANO 800 MEGA",
+            "popId": 1,
+            "popNome": "PARINTINS/AM",
+            "promessasPagamentoMes": 0,
+            "razaoSocial": "RAIMUNDO NAZARE DE OLIVEIRA",
+            "servico_grupo": "fibra",
+            "servico_login": "rairock",
+            "servico_mac": "",
+            "servico_mac2": "",
+            "servico_plano": "PLANO 800 MEGA",
+            "servico_senha": "rairock",
+            "servico_tipo_conexao": "PPPoE",
+            "servico_vlan": "None",
+            "servico_wifi_channel": "auto",
+            "servico_wifi_channel_5": "auto",
+            "servico_wifi_password": "dr12wex1",
+            "servico_wifi_password_5": "dr12wex1",
+            "servico_wifi_ssid": "CXNET",
+            "servico_wifi_ssid_5": "CXNET_5G",
+            "tags": [Array
+            ],
+            "telefones": [Array
+            ],
+            "telefones_cargos": [Array
+            ]
+        }
+    ],
+    "msg": "Contrato(s) Localizado(s)"
+}

@@ -1,6 +1,9 @@
 import { useAsyncStorage } from "@react-native-async-storage/async-storage"
+
 interface AuthProps {
     url_sgp: string;
+    app: string;
+    token: string;
     url_anlix: string;
     username: string;
     password: string;

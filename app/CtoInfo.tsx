@@ -4,7 +4,6 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StatusOnline } from "./StatusOnline";
 import { useGlobalSearchParams } from "expo-router";
 
-import config from "./config";
 
 export default function Cto() {
     const [data, setData] = useState()
@@ -40,8 +39,7 @@ export default function Cto() {
     };
 
     const handleCto = async () => {
-        const auth = await config();
-        const data = await fetch(`${auth.url_sgp}/api.php?cto=${ctoIdent}`).then((response) => response.json())
+        const data = await fetch(`https://sgpos.redeconexaonet.com/api/api.php?cto=${ctoIdent}`).then((response) => response.json())
         setData(data)
         setTotalClientes(data.length)
     }

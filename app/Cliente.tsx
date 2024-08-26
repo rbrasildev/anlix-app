@@ -8,35 +8,40 @@ import Toast from 'react-native-toast-message';
 import config from './config';
 
 
-interface WifiProps {
-    wifi_ssid: string;
-    wifi_password: string;
-    wifi_ssid_5: string;
-    wifi_password_5: string;
-}
+
 
 interface UserSgpProps {
-    nome: string;
-    login: string;
-    login_password: string;
-    mac: string;
-    wifi_ssid: string;
-    wifi_password: string;
-    wifi_ssid_5: string;
-    wifi_password_5: string;
+    razaoSocial: string;
+    servico_wifi_password: string;
+    servico_wifi_password_5: string;
+    servico_wifi_ssid: string;
+    servico_wifi_ssid_5: string;
+    servico_login: string;
+    servico_senha: string;
 }
 
-export default function Cliente<WifiProps>() {
+export default function Cliente<UserSgpProps>() {
     const router = useRouter();
-    const { cpf } = useGlobalSearchParams()
+    const {
+        contratoId,
+        razaoSocial,
+        servico_wifi_password,
+        servico_wifi_password_5,
+        servico_wifi_ssid,
+        servico_wifi_ssid_5,
+        servico_login,
+        servico_senha
+    } = useGlobalSearchParams()
+
+    const [servicoWifiPassword, setServicoWifiPassword] = useState(servico_wifi_password);
+    const [servicoWifiPassword5, setServicoWifiPassword5] = useState(servico_wifi_password_5);
+    const [servicoWifiSsid, setServicoWifiSsid] = useState(servico_wifi_ssid);
+    const [servicoWifiSsid5, setServicoWifiSsid5] = useState(servico_wifi_ssid_5);
+
+
     const [macAddress, setMacAddress] = useState('');
-    const [dataUserSgp, setDataUserSgp] = useState<UserSgpProps>({});
-    const [wifi_ssid, setWifi_ssid] = useState();
-    const [wifi_password, setWifi_password] = useState();
-    const [wifi_ssid_5, setWifi_ssid_5] = useState();
-    const [wifi_password_5, setWifi_password_5] = useState();
     const [iconCopy, setIconCopy] = useState('content-copy')
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false);
 
     const scheme = useColorScheme();
 
@@ -55,7 +60,6 @@ export default function Cliente<WifiProps>() {
     };
 
     const theme = scheme === 'light' ? lightTheme : darkTheme;
-
 
     const callGetMac = async () => {
         const auth = await config();
@@ -94,16 +98,17 @@ export default function Cliente<WifiProps>() {
                 return
             }
 
+
             router.push({
-                pathname: "Roteador",
+                pathname: "/Roteador",
                 params: {
                     mac: macAddress,
-                    wifi_ssid: wifi_ssid,
-                    wifi_password: wifi_password,
-                    wifi_ssid_5: wifi_ssid_5,
-                    wifi_password_5: wifi_password_5,
-                    login: dataUserSgp.login,
-                    login_password: dataUserSgp.login_password,
+                    wifi_ssid: servicoWifiSsid,
+                    wifi_password: servicoWifiPassword,
+                    wifi_ssid_5: servicoWifiSsid5,
+                    wifi_password_5: servicoWifiPassword5,
+                    login: servico_login,
+                    login_password: servico_senha,
                 }
 
             });
@@ -113,27 +118,6 @@ export default function Cliente<WifiProps>() {
             console.log(error)
         }
     }
-
-    const callGetApi = async () => {
-        const auth = await config();
-        try {
-            const response = await fetch(`${auth.url_sgp}/api.php?login=${cpf}`).then((response) => response.json())
-
-            setDataUserSgp(response)
-            setWifi_ssid(response.wifi_ssid)
-            setWifi_password(response.wifi_password)
-            setWifi_ssid_5(response.wifi_ssid_5)
-            setWifi_password_5(response.wifi_password_5)
-            setLoading(false)
-
-        } catch (error) {
-            console.log(error);
-        }
-
-    }
-    useEffect(() => {
-        callGetApi()
-    }, []);
 
 
     const formatMAC = (input: string) => {
@@ -172,9 +156,9 @@ export default function Cliente<WifiProps>() {
                                 size={24}
                                 color='#4CB752'
                             />
-                            <Text style={{ ...theme, fontWeight: "600", fontSize: 20 }}>{dataUserSgp.nome}</Text>
+                            <Text style={{ ...theme, fontWeight: "600", fontSize: 20, maxWidth: '95%' }}>{razaoSocial}</Text>
                         </View>
-                        <Text style={{ ...theme, marginLeft: 28 }}>Usuário PPPoE: {dataUserSgp.login}</Text>
+                        <Text style={{ ...theme, marginLeft: 28 }}>Usuário PPPoE: {servico_login}</Text>
                     </View>
 
                     <View style={{ ...theme, borderWidth: 1, borderRadius: 15, padding: 15, marginVertical: 10 }}>
@@ -193,8 +177,8 @@ export default function Cliente<WifiProps>() {
                                 <Text style={{ ...theme, color: '#333' }}>Network name</Text>
                                 <TextInput
                                     style={{ ...theme, fontSize: 20, borderRadius: 8, marginVertical: 5 }}
-                                    value={wifi_ssid}
-                                    onChangeText={setWifi_ssid}
+                                    value={servicoWifiSsid}
+                                    onChangeText={setServicoWifiSsid}
                                 />
                             </View>
                             <TouchableOpacity
@@ -216,13 +200,13 @@ export default function Cliente<WifiProps>() {
                                 <Text style={{ ...theme, color: '#333', marginBottom: 2 }}>Password</Text>
                                 <TextInput
                                     style={{ ...theme, fontSize: 20 }}
-                                    value={wifi_password}
-                                    onChangeText={setWifi_password}
+                                    value={servicoWifiPassword}
+                                    onChangeText={setServicoWifiPassword}
                                 />
                             </View>
                             <TouchableOpacity
                                 style={{ padding: 4, borderRadius: 4 }}
-                                onPress={() => copyToClipboard(wifi_password)}
+                                onPress={() => copyToClipboard(servicoWifiPassword)}
                             >
                                 <Text style={{ ...theme }}>
                                     <MaterialCommunityIcons
@@ -255,8 +239,9 @@ export default function Cliente<WifiProps>() {
                                 paddingVertical: 5,
                                 fontSize: 20,
                             }}
-                            value={wifi_ssid_5}
-                            onChangeText={setWifi_ssid_5}
+                            value={servicoWifiSsid5}
+                            onChangeText={setServicoWifiSsid5}
+
                         />
                         <Text style={{ ...theme, color: '#333', marginTop: 2 }}>Password</Text>
                         <TextInput
@@ -268,8 +253,9 @@ export default function Cliente<WifiProps>() {
                                 marginBottom: 3,
                                 fontSize: 20,
                             }}
-                            value={wifi_password_5}
-                            onChangeText={setWifi_password_5}
+                            value={servicoWifiPassword5}
+                            onChangeText={setServicoWifiPassword5}
+
                         />
                     </View>
 

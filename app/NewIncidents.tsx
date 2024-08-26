@@ -6,14 +6,13 @@ import { Text, TouchableOpacity, useColorScheme, View } from "react-native";
 import Toast from "react-native-toast-message";
 
 export default function NewIncidents() {
-    const [isChecked, setIsChecked] = useState('');
     const [name, setName] = useState('')
     const [message, setMessage] = useState('')
     const scheme = useColorScheme();
 
 
     const lightTheme = {
-        textColor: '#000',
+        textColor: '#333',
         color: '#141414',
         backgroundColor: '#fff',
         borderColor: '#ccc'
@@ -23,7 +22,7 @@ export default function NewIncidents() {
         textColor: '#ccc',
         color: '#ccc',
         borderColor: '#222',
-        backgroundColor: '#212121'
+        backgroundColor: '#141414'
     };
 
     const theme = scheme === 'light' ? lightTheme : darkTheme;
@@ -54,21 +53,12 @@ export default function NewIncidents() {
     }
     return (
         <View style={{ padding: 15 }}>
-            <View style={{ flexDirection: 'row', gap: 3, marginVertical: 10 }}>
-             
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
-                    <TouchableOpacity style={{ ...theme, borderWidth: 1, width: 24, height: 24, borderRadius: 16, alignItems: 'center', justifyContent: 'center' }}>
-                        <Text>{isChecked && <MaterialCommunityIcons color={theme.color} name="check" />}</Text>
-                    </TouchableOpacity>
-                    <Text>Identificado</Text>
+            <View style={{ ...theme, borderWidth: 1, marginVertical: 10, padding: 15, borderRadius: 15 }}>
+                <View style={{ alignItems: 'center', flexDirection: 'row', gap: 6 }}>
+                    <MaterialCommunityIcons color={theme.color} size={20} name="alert" />
+                    <Text style={{ color: theme.textColor, fontSize: 20 }}>Criar incidentes</Text>
                 </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
-                    <TouchableOpacity style={{ ...theme, borderWidth: 1, width: 24, height: 24, borderRadius: 16, alignItems: 'center', justifyContent: 'center' }}>
-                        <Text>{isChecked && <MaterialCommunityIcons color={theme.color} name="check" />}</Text>
-                    </TouchableOpacity>
-                    <Text>Resolvido</Text>
-                </View>
-
+                <Text style={{ color: theme.textColor }}>Descreva o incidente, especifica endereço e ocorrido!</Text>
             </View>
             <Input
                 onChangeText={setName}

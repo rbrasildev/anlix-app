@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, ActivityIndicator, useColorScheme } from "react-native";
+import { View, Text, TouchableOpacity, KeyboardAvoidingView, ActivityIndicator, useColorScheme } from "react-native";
 import { useRouter } from 'expo-router';
 import { StyleSheet } from "react-native";
-import config from "../config";
+
 import Toast from "react-native-toast-message";
 import Input from "@/components/Input";
+import getSgpData from "../services/getSgpData";
+
 
 export default function Apply() {
     const [pppoe, setPppoe] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-
 
     const router = useRouter()
     const scheme = useColorScheme();
@@ -29,14 +30,11 @@ export default function Apply() {
     const theme = scheme === 'light' ? lightTheme : darkTheme;
 
 
-    const getDataSgp = async () => {
+    async function handleDataSgp() {
+        setIsLoading(true)
         try {
-            setIsLoading(true);
 
-            const auth = await config();
-
-            const response = await fetch(`${auth.url_sgp}/api.php?login=${pppoe}`).then((response) => response.json())
-
+            const response = await getSgpData(pppoe)
 
             if (pppoe === "") {
                 Toast.show({
@@ -47,27 +45,38 @@ export default function Apply() {
                 return;
             }
 
-            if (!response.login) {
+            if (response.contratos == false) {
                 Toast.show({
                     type: 'error',
-                    text1: 'Cliente não encontrado'
+                    text1: `Não conseguimos localizar esse cpf ${pppoe}`
                 })
                 setIsLoading(false);
                 return;
             }
 
+            console.log(response)
+
             router.push({
                 pathname: "/Cliente",
-                params: { cpf: pppoe }
+                params: {
+                    clienteId: response.contratos[0].clienteId,
+                    contratoId: response.contratos[0].contratoId,
+                    razaoSocial: response.contratos[0].razaoSocial,
+                    servico_wifi_password: response.contratos[0].servico_wifi_password,
+                    servico_wifi_password_5: response.contratos[0].servico_wifi_password_5,
+                    servico_wifi_ssid: response.contratos[0].servico_wifi_ssid,
+                    servico_wifi_ssid_5: response.contratos[0].servico_wifi_ssid_5,
+                    servico_login: response.contratos[0].servico_login,
+                    servico_senha: response.contratos[0].servico_senha
+                }
             });
 
             setIsLoading(false);
         } catch (error) {
-            console.log(error);
-            setIsLoading(false);
+            console.log(error)
             Toast.show({
                 type: 'error',
-                text1: 'Ocorreu um erro ao buscar os dados'
+                text1: `Error${error}`
             })
         }
     }
@@ -77,18 +86,18 @@ export default function Apply() {
             <KeyboardAvoidingView behavior="position" enabled>
                 <Text style={{ fontSize: 32, color: '#4CB752' }}>Anlix apply</Text>
 
-                <Text style={{ fontSize: 20, color: theme.textColor, fontWeight: 'bold' }}>PPPoE</Text>
+                <Text style={{ fontSize: 20, color: theme.textColor, fontWeight: 'bold', marginTop: 10 }}>CPF/CNPJ</Text>
                 <Input
                     placeholderTextColor="#87949D"
-                    placeholder="Digite login pppoe"
+                    placeholder="Digite CPF do cliente"
                     value={pppoe}
                     onChangeText={setPppoe}
                     autoCapitalize={"none"}
                 />
 
-                <TouchableOpacity style={styles.button} onPress={getDataSgp}>
+                <TouchableOpacity style={styles.button} onPress={handleDataSgp}>
                     <Text style={{ fontSize: 20, fontWeight: 'medium' }}>Enviar</Text>
-                    <View style={{ marginLeft: 10 }}>
+                    <View style={{ width: 32 }}>
                         {isLoading && <ActivityIndicator size="small" color="#fff" />}
                     </View>
                 </TouchableOpacity>

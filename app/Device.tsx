@@ -3,6 +3,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text, View, TouchableOpacity, ActivityIndicator, useColorScheme, Clipboard, RefreshControl, FlatList } from "react-native";
 
 import config from "./config";
+import getDeviceData from "./services/getDeviceData";
 
 interface DeviceProps {
     _id: string;
@@ -38,15 +39,7 @@ export default function Device() {
     const handleResetDefault = async () => {
         setIsLoading(true);
         try {
-            const auth = await config();
-            const response = await fetch(`${auth.url_anlix}/api/v2/device/get`, {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Basic ' + btoa(auth.username + ':' + auth.password)
-                },
-                body: JSON.stringify({ "fields": "_id,pppoe_user,model,use_tr069" })
-            }).then((response) => response.json())
+            const response = await getDeviceData()
             setDataMac(response);
         } catch (error) {
             console.log(error)

@@ -4,6 +4,7 @@ import { View, Text, useColorScheme, ScrollView, ActivityIndicator } from "react
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import config from "../config";
 import { router } from "expo-router";
+import getDeviceData from "../services/getDeviceData";
 
 
 interface DeviceProps {
@@ -43,16 +44,9 @@ export default function HomeScreen() {
                 router.push({ pathname: '/settings' })
                 return;
             }
-            const response: DeviceProps[] = await fetch(`${auth.url_anlix}/api/v2/device/get`, {
 
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Basic ' + btoa(auth.username + ':' + auth.password)
-                },
-                body: JSON.stringify({ "fields": "model,use_tr069" })
-            }).then((response) => response.json())
-            // Extraindo modelos únicos
+            const response: DeviceProps[] = await getDeviceData();
+
             const uniqueModels: String[] = [...new Set(response.map((item: DeviceProps) => item.model))];
 
             setModels(uniqueModels);

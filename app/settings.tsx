@@ -1,14 +1,18 @@
-import { KeyboardAvoidingView, Text, TextInput, TouchableOpacity, View, useColorScheme, ScrollView, Alert } from "react-native"
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { KeyboardAvoidingView, Text, TouchableOpacity, View, useColorScheme, ScrollView, Alert } from "react-native"
+
 import { useEffect, useState } from "react";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
 
 import { MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import Input from "@/components/Input";
+
 
 interface AuthProps {
     url_sgp: string;
+    app: string;
+    token: string;
     url_anlix: string;
     username: string;
     password: string;
@@ -17,6 +21,8 @@ interface AuthProps {
 interface DeviceProps {
     use_tr069: boolean
     model: string;
+    status: number;
+    message: string;
 }
 
 export default function Settings() {
@@ -25,6 +31,8 @@ export default function Settings() {
     const [url_anlix, setUrlAnlix] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [app, setApp] = useState('');
+    const [token, setToken] = useState('');
 
     const { getItem, setItem, removeItem } = useAsyncStorage('@anlix:auth')
 
@@ -51,10 +59,13 @@ export default function Settings() {
             url_sgp,
             url_anlix,
             username,
-            password
+            password,
+            app,
+            token
         }
+
         const response: DeviceProps[] = await fetch(`${url_anlix}/api/v2/device/get`, {
-            method: 'post',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Basic ' + btoa(username + ':' + password)
@@ -79,6 +90,8 @@ export default function Settings() {
             return;
         }
 
+
+
         await setItem(JSON.stringify(newData))
 
         Toast.show({
@@ -92,12 +105,14 @@ export default function Settings() {
 
 
     async function removeConfig() {
-        removeItem()
-
         setUrlSgp('')
         setUrlAnlix('')
         setUsername('')
         setPassword('')
+        setApp('')
+        setToken('')
+
+        removeItem()
 
         Toast.show({
             type: 'success',
@@ -112,6 +127,8 @@ export default function Settings() {
         const data: AuthProps = response ? JSON.parse(response) : [];
 
         setUrlSgp(data.url_sgp)
+        setApp(data.app)
+        setToken(data.token)
         setUrlAnlix(data.url_anlix)
         setUsername(data.username)
         setPassword(data.password)
@@ -128,28 +145,34 @@ export default function Settings() {
             <ScrollView>
                 <View style={{ padding: 15, borderRadius: 15, }}>
                     <View style={{ ...theme, flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Text style={{ fontSize: 22, ...theme, backgroundColor: 'transparent' }}>Dados do SGP</Text>
+                        <Text style={{ fontSize: 22, color: theme.color }}>Dados do SGP</Text>
                         <TouchableOpacity onPress={() => removeConfig()} style={{ ...theme, borderRadius: 10, padding: 10, flexDirection: 'row', borderWidth: 1, gap: 4, alignItems: 'center' }}>
                             <Text style={{ ...theme, borderRadius: 10 }}>Limpar</Text>
                             <MaterialIcons name="auto-delete" size={22} color={'#4CB752'} />
                         </TouchableOpacity>
                     </View>
 
-                    <Text style={{ ...theme, backgroundColor: 'transparent' }}>Digite a url do SGP</Text>
-                    <TextInput
+                    <Text style={{ color: theme.color }}>Digite a url do SGP</Text>
+                    <Input
                         value={url_sgp}
                         onChangeText={setUrlSgp}
-                        style={{
-                            ...theme,
-                            fontSize: 18,
-                            padding: 10,
-                            paddingHorizontal: 15,
-                            borderWidth: 1,
-                            borderRadius: 15,
-                            marginTop: 10,
-                        }}
                         placeholder="https://"
                         placeholderTextColor={'#666'}
+                    />
+                    <Text style={{ color: theme.color }}>App</Text>
+                    <Input
+                        value={app}
+                        onChangeText={setApp}
+                        placeholder="app"
+                        placeholderTextColor={'#666'}
+                    />
+                    <Text style={{ color: theme.color }}>Token</Text>
+                    <Input
+                        value={token}
+                        onChangeText={setToken}
+                        placeholder="token"
+                        placeholderTextColor={'#666'}
+                        secureTextEntry
                     />
                 </View>
                 <View
@@ -165,56 +188,30 @@ export default function Settings() {
                         }}
                     />
                     <View style={{ marginVertical: 15 }}>
-                        <Text style={{ fontSize: 22, ...theme, marginBottom: 15, backgroundColor: 'transparent' }}>Dados do Flashman</Text>
-                        <Text style={{ ...theme, backgroundColor: 'transparent' }}>Digite a url do ANLIX</Text>
-                        <TextInput
+                        <Text style={{ fontSize: 22, marginBottom: 15, color: theme.color }}>Dados do Flashman</Text>
+                        <Text style={{ color: theme.color }}>Digite a url do ANLIX</Text>
+                        <Input
                             onChangeText={setUrlAnlix}
                             value={url_anlix}
-                            style={{
-                                ...theme,
-                                fontSize: 18,
-                                padding: 10,
-                                paddingHorizontal: 15,
-                                borderWidth: 1,
-                                borderRadius: 15,
-                                marginTop: 10,
-                            }}
                             placeholder="https://"
                             placeholderTextColor={'#666'}
                         />
+
                     </View>
                     <View>
-                        <Text style={{ ...theme, backgroundColor: 'transparent' }}>Username</Text>
-                        <TextInput
+                        <Text style={{ color: theme.color }}>Username</Text>
+                        <Input
                             onChangeText={setUsername}
                             value={username}
-                            style={{
-                                ...theme,
-                                fontSize: 18,
-                                padding: 10,
-                                paddingHorizontal: 15,
-                                borderWidth: 1,
-                                borderRadius: 15,
-                                marginTop: 10,
-                            }}
                             placeholder="Digite usuário"
                             placeholderTextColor={'#666'}
                         />
                     </View>
                     <View style={{ marginVertical: 15 }}>
-                        <Text style={{ ...theme, backgroundColor: 'transparent' }}>Password</Text>
-                        <TextInput
+                        <Text style={{ color: theme.color }}>Password</Text>
+                        <Input
                             onChangeText={setPassword}
                             value={password}
-                            style={{
-                                ...theme,
-                                fontSize: 18,
-                                padding: 10,
-                                paddingHorizontal: 15,
-                                borderWidth: 1,
-                                borderRadius: 15,
-                                marginTop: 10,
-                            }}
                             placeholder="Digite a senha"
                             placeholderTextColor={'#666'}
                             secureTextEntry={true}
@@ -232,7 +229,7 @@ export default function Settings() {
                         justifyContent: 'center',
                         alignItems: 'center',
                     }}>
-                    <Text style={{ fontSize: 18, backgroundColor: 'transparent', fontWeight: '500' }}>Salvar</Text>
+                    <Text style={{ fontSize: 18, fontWeight: '500' }}>Salvar</Text>
                 </TouchableOpacity>
             </ScrollView>
             <Toast />
