@@ -10,7 +10,7 @@ const getDeviceData = async () => {
                 'Content-Type': 'application/json',
                 'Authorization': 'Basic ' + btoa(auth.username + ':' + auth.password)
             },
-            body: JSON.stringify({ "fields": "model,use_tr069" })
+            body: JSON.stringify({ "fields": "_id,pppoe_user,model,use_tr069" })
         }).then((response) => response.json())
 
         return response;
@@ -18,5 +18,7 @@ const getDeviceData = async () => {
         console.log(error)
     }
 }
+
+
 
 export default getDeviceData;

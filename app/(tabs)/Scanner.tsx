@@ -6,8 +6,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import config from "../config";
 import getDeviceData from "../services/getDeviceData";
 
+type RoteadorProps = {
+    _id: string;
+    pppoe_user: string;
+    model: string;
+    use_tr069: boolean;
+}
+
 export default function Device() {
-    const [dataMac, setDataMac] = useState([]);
+    const [dataMac, setDataMac] = useState<RoteadorProps[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false)
 
