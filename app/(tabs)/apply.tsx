@@ -6,6 +6,8 @@ import { StyleSheet } from "react-native";
 import Toast from "react-native-toast-message";
 import Input from "@/components/Input";
 import getSgpData from "../services/getSgpData";
+import * as Animatable from 'react-native-animatable';
+import { SlideInLeft } from "react-native-reanimated";
 
 
 export default function Apply() {
@@ -82,7 +84,7 @@ export default function Apply() {
     }
 
     return (
-        <View style={styles.container}>
+        <Animatable.View animation={'slideInLeft'} style={styles.container}>
             <KeyboardAvoidingView behavior="position" enabled>
                 <Text style={{ fontSize: 32, color: '#4CB752' }}>Anlix apply</Text>
 
@@ -102,7 +104,7 @@ export default function Apply() {
                     </View>
                 </TouchableOpacity>
             </KeyboardAvoidingView>
-        </View>
+        </Animatable.View>
     )
 }
 

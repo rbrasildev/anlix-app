@@ -5,6 +5,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import config from "../config";
 import { router } from "expo-router";
 import getDeviceData from "../services/getDeviceData";
+import * as Animatable from 'react-native-animatable';
 
 
 interface DeviceProps {
@@ -64,13 +65,13 @@ export default function HomeScreen() {
     }, [])
 
     const renderDeviceCard = (model: string) => (
-        <View key={model} style={{ ...theme, borderWidth: 1, padding: 20, margin: 10, borderRadius: 15 }}>
+        <Animatable.View animation={'slideInLeft'} duration={Math.floor(Math.random() * 100 * 10)} easing={'ease-in-out'} key={model} style={{ ...theme, borderWidth: 1, padding: 20, margin: 10, borderRadius: 15 }}>
             <View style={{ flexDirection: 'row', gap: 3 }}>
                 <MaterialCommunityIcons style={{ ...theme }} name="router-wireless" size={18} />
                 <Text style={{ ...theme, maxWidth: '85%' }}>{model}</Text>
             </View>
             <Text style={{ ...theme, fontSize: 36, fontWeight: 'bold' }}>{dataMac.filter(item => item.model === model).length}</Text>
-        </View>
+        </Animatable.View>
 
     );
 
@@ -84,8 +85,8 @@ export default function HomeScreen() {
 
     return (
         <ScrollView>
-            <View style={{ flex: 1, flexDirection: 'row', gap: 3, padding: 15, justifyContent: 'center' }}>
-                <View style={{ width: '50%', height: '100%', borderRadius: 15, }}>
+            <Animatable.View animation={'slideInUp'} duration={1000} style={{ flex: 1, flexDirection: 'row', gap: 3, padding: 15, justifyContent: 'center' }}>
+                <Animatable.View animation={'slideInUp'} duration={2000} style={{ width: '50%', height: '100%', borderRadius: 15, }}>
                     <View style={{ ...theme, borderWidth: 0.5, padding: 20, margin: 10, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
                             <MaterialCommunityIcons style={{ ...theme }} size={22} name="access-point" />
@@ -96,13 +97,13 @@ export default function HomeScreen() {
                         </View>
                     </View>
                     {models.map((model, key) => (key <= 2 && renderDeviceCard(model)))}
-                </View>
+                </Animatable.View>
 
                 <View style={{ width: '50%', height: '100%', borderRadius: 15, padding: 15 }}>
                     {models.map((model, key) => (key > 2 && renderDeviceCard(model)))}
                 </View>
 
-            </View >
+            </Animatable.View >
         </ScrollView>
     )
 }

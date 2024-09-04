@@ -4,7 +4,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState } from "react";
 
 import { useRouter } from "expo-router";
-
+import * as Animatable from 'react-native-animatable';
 import Toast from "react-native-toast-message";
 import config from "../config";
 
@@ -68,7 +68,7 @@ export default function App() {
     }
 
     return (
-        <View style={styles.container}>
+        <Animatable.View animation={'slideInLeft'} style={styles.container}>
             <View style={{ width: '100%' }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
                     <MaterialCommunityIcons
@@ -106,7 +106,7 @@ export default function App() {
                     <Text style={{ fontSize: 20, fontWeight: '400' }}>Buscar</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </Animatable.View>
     )
 }
 
