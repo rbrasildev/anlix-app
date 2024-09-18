@@ -4,8 +4,6 @@ import { useRouter } from 'expo-router';
 import { StyleSheet } from "react-native";
 import { auth } from "@/constants/Auth";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useAsyncStorage } from "@react-native-async-storage/async-storage";
-
 
 export default function HomeScreen() {
     const [dataMac, setDataMac] = useState([]);
