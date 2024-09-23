@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { FlatList, Text, useColorScheme, View } from "react-native";
-
+import * as Animatable from 'react-native-animatable'
 interface IncidentesProps {
     id: number;
     name: string;
@@ -68,28 +68,28 @@ export default function Incidents() {
     }, [])
 
     return (
-        <View style={{ flex: 1, margin: 20, position: 'relative', zIndex: -1, backgroundColor: 'transparent' }}>
+        <View className="flex-1 p-4">
             <FlatList
-                contentContainerStyle={{ gap: 4, borderLeftWidth: 1, paddingLeft: 10, borderLeftColor: '#ccc', backgroundColor: 'transparent' }}
+                contentContainerStyle={{ gap: 4, borderLeftWidth: 1, paddingLeft: 10, borderLeftColor: '#333', backgroundColor: 'none' }}
                 data={dataIncidents}
                 keyExtractor={(item) => String(item.id)}
                 renderItem={({ item, index }) =>
-                    <View style={{ ...theme, borderWidth: 1, padding: 10, borderRadius: 15 }}>
+                    <Animatable.View animation={'slideInDown'} duration={index * 300} style={{ ...theme, borderWidth: 1, padding: 10, borderRadius: 15 }}>
                         <View style={{ flexDirection: 'row', gap: 3 }}>
                             {/* {item.status == 4 ? <MaterialCommunityIcons name="check-circle" size={18} color={'green'} /> : <MaterialCommunityIcons name="information" size={18} color={'red'} />} */}
-                            <Text style={{ ...theme, fontWeight: 'bold' }}>{item.name}</Text>
+                            <Text className="font-semibold text-gray-400 mb-2">{item.name}</Text>
                         </View>
-                        <Text style={{ ...theme, marginTop: 5, marginLeft: 3 }}>{item.message}</Text>
-                        <Text style={{ ...theme, marginTop: 5, marginLeft: 3 }}>{item.updates.message}</Text>
+                        <Text className="text-gray-500 font-light">{item.message}</Text>
+                        <Text className="text-gray-500 font-light">{item.updates.message}</Text>
 
                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 2, justifyContent: 'flex-end' }}>
                             <MaterialCommunityIcons size={14} name="calendar" color={theme.color} />
                             <Text style={{ ...theme }}>{new Date(item.created_at).toLocaleString('pt-BR')}</Text>
                         </View>
-                        <View style={{ position: 'absolute', top: 10, left: -23, zIndex: 999 }}>
+                        <Text style={{ position: 'absolute', top: -12, left: -15, }}>
                             {item.status == 4 ? <MaterialCommunityIcons name="check-circle" size={18} color={'green'} /> : <MaterialCommunityIcons name="information" size={18} color={'red'} />}
-                        </View>
-                    </View>
+                        </Text>
+                    </Animatable.View>
                 }
             />
         </View>

@@ -70,13 +70,13 @@ export default function App() {
     return (
         <Animatable.View animation={'slideInLeft'} style={styles.container}>
             <View style={{ width: '100%' }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+                <View className="flex-row items-center gap-2">
                     <MaterialCommunityIcons
                         name="package"
                         color="#666"
                         size={30}
                     />
-                    <Text style={{ color: theme.textColor, fontSize: 16 }}>Digite número da CTO</Text>
+                    <Text className="font-semibold text-gray-500 text-xl uppercase my-4">IDENTIFICAÇÃO DA CTO</Text>
                 </View>
                 <TextInputMask
                     style={{
@@ -86,7 +86,7 @@ export default function App() {
                         alignItems: 'center',
                         marginVertical: 5,
                         paddingHorizontal: 15,
-                        padding: 10,
+                        padding: 16,
                         fontSize: 18,
                         borderWidth: 1
                     }}
@@ -103,7 +103,7 @@ export default function App() {
                 <TouchableOpacity
                     onPress={navigateToCto}
                     style={styles.button}>
-                    <Text style={{ fontSize: 20, fontWeight: '400' }}>Buscar</Text>
+                    <Text className="font-semibold text-gray-100 text-xl">Buscar</Text>
                 </TouchableOpacity>
             </View>
         </Animatable.View>

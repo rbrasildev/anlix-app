@@ -11,11 +11,12 @@ import * as Animatable from 'react-native-animatable';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
+interface ContratoProps { razaoSocial: string, planointernet: string; servico_login: string, servico_wifi_ssid: string, contratoId: number }
 
 export default function Apply() {
     const [pppoe, setPppoe] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const [contratoData, setContratoData] = useState([])
+    const [contratoData, setContratoData] = useState<ContratoProps | any>([])
     const bottomSheetRef = useRef<BottomSheet>(null);
     const router = useRouter()
     const scheme = useColorScheme();
@@ -91,8 +92,8 @@ export default function Apply() {
         }
     }
 
-    function handleContractSelected(id) {
-        const response = contratoData.filter((item) => item.contratoId === id)
+    function handleContractSelected(id: number) {
+        const response = contratoData.filter((item: ContratoProps) => item.contratoId === id)
 
         router.push({
             pathname: "/Cliente",
@@ -110,7 +111,7 @@ export default function Apply() {
         });
     }
 
-    const contracts = (item, index) => {
+    const contracts = (item: ContratoProps, index: number) => {
         return (
             <Animatable.View duration={300 * index} animation={'slideInUp'}>
                 <TouchableOpacity
@@ -168,7 +169,7 @@ export default function Apply() {
                 <Text className='text-2xl font-light m-4 text-center text-gray-800'>contratos</Text>
                 <BottomSheetFlatList className='p-4'
                     data={contratoData}
-                    keyExtractor={(item) => String(item.contratoId)}
+                    keyExtractor={(item: ContratoProps) => String(item.contratoId)}
                     renderItem={({ item, index }) => contracts(item, index)}
                 >
                 </BottomSheetFlatList>

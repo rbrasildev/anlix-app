@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { View, Text, FlatList, RefreshControl, useColorScheme } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StatusOnline } from "./StatusOnline";
 import { useGlobalSearchParams } from "expo-router";
+import * as Animatable from 'react-native-animatable';
 
 
 export default function Cto() {
@@ -61,27 +62,29 @@ export default function Cto() {
                     />
                 }
                 ListHeaderComponent={
-                    <View style={{ padding: 15, borderRadius: 15 }}>
-                        <View style={{ marginBottom: 3, flexDirection: 'row', alignItems: 'center' }}>
+                    <View className="py-4">
+                        <View className="mb-2 flex-row items-center">
                             <MaterialCommunityIcons
                                 name="package"
                                 size={32}
                                 style={{ color: theme.color }}
                             />
-                            <Text style={{ color: '#666', fontSize: 24, }}>{ctoIdent}</Text>
+                            <Text className="font-bold text-gray-500 text-2xl">{ctoIdent}</Text>
                         </View>
                         <View style={{ flexDirection: 'row', gap: 10 }}>
                             <View style={{ alignItems: 'center', justifyContent: 'center', borderRadius: 20 }}>
-                                <Text style={{ color: '#666', fontSize: 16, fontWeight: 'bold' }}><MaterialCommunityIcons size={16} name="image-filter-frames" /> Ocupadas ({totalClientes})</Text>
+                                <Text className="font-bold text-gray-400"><MaterialCommunityIcons size={16} name="image-filter-frames" /> Ocupadas ({totalClientes})</Text>
                             </View>
                             <View style={{ alignItems: 'center', justifyContent: 'center', borderRadius: 20 }}>
-                                <Text style={{ color: '#666', fontSize: 16, fontWeight: 'bold' }}><MaterialCommunityIcons size={16} name="image-filter-frames" /> Livres ({16 - totalClientes})</Text>
+                                <Text className="font-bold text-gray-400"><MaterialCommunityIcons size={16} name="image-filter-frames" /> Livres ({16 - totalClientes})</Text>
                             </View>
                         </View>
                     </View>
                 }
-                renderItem={({ item }) => (
-                    <View
+                renderItem={({ item, index }) => (
+                    <Animatable.View
+                        animation={'fadeInUp'}
+                        duration={300 * index}
                         style={{
                             ...theme,
                             borderRadius: 15,
@@ -90,18 +93,9 @@ export default function Cto() {
                             marginBottom: 4
                         }}>
                         <View>
-                            <Text
-                                style={{
-                                    color: theme.color,
-                                    fontWeight: "700",
-                                    marginBottom: 4,
-                                    fontSize: 18,
-                                }}>
-                                {item.nome}
-                            </Text>
+                            <Text className="font-bold mb-2 text-slate-500">{item.nome}</Text>
 
                             <Text style={{
-                                color: theme.color,
                                 paddingLeft: 5,
                                 color: item.status == 3 ? '#E3371E' : item.status == 4 ? '#F2AE30' : '#666'
                             }}>
@@ -154,7 +148,7 @@ export default function Cto() {
                                 </View>
                             </View>
                         </View>
-                    </View>
+                    </Animatable.View>
                 )}
             />
         </View>

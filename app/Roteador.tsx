@@ -136,7 +136,7 @@ export default function Roteador() {
 
     if (loading) { return <ActivityIndicator size="large" color="#fff" /> }
 
-    const devices = (device) => {
+    const devices = (device: RoteadorProps | any) => {
         return (
             <View style={{ ...theme, borderWidth: 1, borderRadius: 15, padding: 5, marginHorizontal: 15 }}>
                 <Text style={{ ...theme, padding: 10, paddingBottom: 0, }}>Conectados</Text>
