@@ -64,8 +64,8 @@ export default function HomeScreen() {
         handleAnlix()
     }, [])
 
-    const renderDeviceCard = (model: string) => (
-        <Animatable.View animation={'slideInLeft'} duration={Math.floor(Math.random() * 100 * 10)} easing={'ease-in-out'} key={model} style={{ ...theme, borderWidth: 1, padding: 20, margin: 10, borderRadius: 15 }}>
+    const renderDeviceCard = (model: string, key: number) => (
+        <Animatable.View animation={'slideInLeft'} duration={key * 1000} easing={'ease-in-out'} key={model} style={{ ...theme, borderWidth: 1, padding: 20, margin: 10, borderRadius: 15 }}>
             <View style={{ flexDirection: 'row', gap: 3 }}>
                 <MaterialCommunityIcons style={{ ...theme }} name="router-wireless" size={18} />
                 <Text style={{ ...theme, maxWidth: '85%' }}>{model}</Text>
@@ -96,7 +96,7 @@ export default function HomeScreen() {
                             <Text style={{ ...theme, fontSize: 32, fontWeight: '700' }}>{dataMac.length}</Text>
                         </View>
                     </View>
-                    {models.map((model, key) => (key <= 2 && renderDeviceCard(model)))}
+                    {models.map((model, key) => (key <= 2 && renderDeviceCard(model, key)))}
                 </Animatable.View>
 
                 <View style={{ width: '50%', height: '100%', borderRadius: 15, padding: 15 }}>
