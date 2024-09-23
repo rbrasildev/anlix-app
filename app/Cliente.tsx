@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Alert, Clipboard, StyleSheet, useColorScheme, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, StyleSheet, useColorScheme, ScrollView } from 'react-native';
 import { useGlobalSearchParams, useRouter } from "expo-router";
-
+import * as Clipboard from 'expo-clipboard';
 import Toast from 'react-native-toast-message';
 import config from './config';
 
@@ -134,8 +134,8 @@ export default function Cliente<UserSgpProps>() {
         }
     };
 
-    const copyToClipboard = (content: string) => {
-        Clipboard.setString(content);
+    const copyToClipboard = async (content: string) => {
+        await Clipboard.setStringAsync(content);
     };
 
     return (
@@ -183,7 +183,7 @@ export default function Cliente<UserSgpProps>() {
                             </View>
                             <TouchableOpacity
                                 style={{ padding: 4, borderRadius: 4, alignItems: 'center', justifyContent: 'center' }}
-                                onPress={() => copyToClipboard(wifi_ssid)}
+                                onPress={() => copyToClipboard(servicoWifiSsid)}
                             >
                                 <Text style={{ ...theme }}>
                                     <MaterialCommunityIcons

@@ -79,58 +79,55 @@ export default function Roteador() {
 
     //criar wifi
     const callPostApi = async () => {
-        const auth = await config();
-        const response = await fetch(`${auth.url_anlix}/api/v2/device/update/${params.mac}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Basic ' + btoa(auth.username + ':' + auth.password)
-            },
-            body: JSON.stringify(
-                {
-                    "content": {
-                        mac_address: params.mac,
-                        pppoe_user: params.login,
-                        pppoe_password: params.login_password,
-                        wifi_ssid: params.wifi_ssid,
-                        wifi_password: params.wifi_password,
-                        wifi_ssid_5ghz: params.wifi_ssid_5,
-                        wifi_password_5ghz: params.wifi_password_5,
-                    }
-                })
+        try {
+            const auth = await config();
+            const response = await fetch(`${auth.url_anlix}/api/v2/device/update/${params.mac}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Basic ' + btoa(auth.username + ':' + auth.password)
+                },
+                body: JSON.stringify(
+                    {
+                        "content": {
+                            mac_address: params.mac,
+                            pppoe_user: params.login,
+                            pppoe_password: params.login_password,
+                            wifi_ssid: params.wifi_ssid,
+                            wifi_password: params.wifi_password,
+                            wifi_ssid_5ghz: params.wifi_ssid_5,
+                            wifi_password_5ghz: params.wifi_password_5,
+                        }
+                    })
 
-        }).catch(error => {
-            if (error.response.status == 500) {
-                Toast.show({
-                    type: 'error',
-                    text1: 'Erro ao atualizar o Roteador, Favor pedir para as meninas tirar a porra dos caracteres especiais. Tente novamente!',
-                })
-
-            }
-            if (error.response.status == 404) {
-                Toast.show({
-                    type: 'error',
-                    text1: error.message + "Falha ao conectar com o servidor",
-                })
-
-            }
-            if (error.code == "ERR_NETWORK") {
-                Toast.show({
-                    type: 'error',
-                    text1: error.message,
-                })
-            }
-            console.log(error)
-            return;
-        })
-
-        if (response.status == 200) {
-            Toast.show({
-                type: 'success',
-                text1: "Configuração aplicada com sucesso!"
             })
-        }
+            if (response.status == 200) {
+                Toast.show({
+                    type: 'success',
+                    text1: "Configuração aplicada com sucesso!"
+                })
+            }
 
+            if (response.status == 404) {
+                Toast.show({
+                    type: 'error',
+                    text1: "Roteador não encontrado!"
+                })
+            }
+
+            if (response.status == 500) {
+                Toast.show({
+                    type: 'error',
+                    text1: "Erro ao validar os campos!",
+                    text2: "Certifique que os dados estão corretos"
+                })
+            }
+
+
+
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     useEffect(() => {

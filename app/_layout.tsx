@@ -1,17 +1,29 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
+import {
+  useFonts,
+  Inter_100Thin,
+  Inter_200ExtraLight,
+  Inter_300Light,
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_600SemiBold,
+  Inter_700Bold,
+  Inter_800ExtraBold,
+  Inter_900Black,
+} from '@expo-google-fonts/inter';
 
 import { router, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
-
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
 import { useAsyncStorage } from '@react-native-async-storage/async-storage';
-import Settings from './settings';
+import "./styles/global.css"
+
 
 
 SplashScreen.preventAutoHideAsync();
@@ -30,7 +42,15 @@ export default function RootLayout() {
 
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    Inter_100Thin,
+    Inter_200ExtraLight,
+    Inter_300Light,
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+    Inter_700Bold,
+    Inter_800ExtraBold,
+    Inter_900Black,
   });
 
   useEffect(() => {
@@ -45,7 +65,8 @@ export default function RootLayout() {
   }
 
   return (
-    <>
+
+    <GestureHandlerRootView>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -86,10 +107,10 @@ export default function RootLayout() {
 
             }}
           />
-        
+
         </Stack>
       </ThemeProvider>
       <Toast />
-    </>
+    </GestureHandlerRootView>
   );
 }

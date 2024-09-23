@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Text, View, TouchableOpacity, ActivityIndicator, Alert, useColorScheme, Clipboard, RefreshControl, FlatList } from "react-native";
+import { Text, View, TouchableOpacity, ActivityIndicator, Alert, useColorScheme, RefreshControl, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as Clipboard from 'expo-clipboard';
 
-import config from "../config";
 import getDeviceData from "../services/getDeviceData";
 
 type RoteadorProps = {
@@ -35,6 +35,10 @@ export default function Device() {
 
     const theme = scheme === 'light' ? lightTheme : darkTheme;
 
+    const copyToClipboard = async (content: string) => {
+        await Clipboard.setStringAsync(content);
+    };
+
     const handleResetDefault = async () => {
         setIsLoading(true);
         try {
@@ -48,7 +52,7 @@ export default function Device() {
         }
     }
 
-    const resetdefaults = dataMac.filter(item => item.pppoe_user === "resetdefault");
+    let resetdefaults = dataMac.filter(item => item.pppoe_user === "resetdefault");
 
     useEffect(() => {
         handleResetDefault()
@@ -58,6 +62,10 @@ export default function Device() {
         setRefreshing(true);
         handleResetDefault()
     };
+
+    if (refreshing) {
+        resetdefaults = [];
+    }
 
     return (
         <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
@@ -106,9 +114,7 @@ export default function Device() {
                                 alignItems: 'center',
                                 marginRight: 10,
                             }}
-                            onPress={() => {
-                                Clipboard.setString(resetdefaults[index]._id);
-                            }}
+                            onPress={() => copyToClipboard(resetdefaults[index]._id)}
                         >
                             <View>
                                 <MaterialCommunityIcons

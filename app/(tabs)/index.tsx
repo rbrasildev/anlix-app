@@ -85,7 +85,7 @@ export default function HomeScreen() {
 
     return (
         <ScrollView>
-            <Animatable.View animation={'slideInUp'} duration={1000} style={{ flex: 1, flexDirection: 'row', gap: 3, padding: 15, justifyContent: 'center' }}>
+            <Animatable.View animation={'slideInUp'} duration={1000} className="flex-1 flex-row">
                 <Animatable.View animation={'slideInUp'} duration={2000} style={{ width: '50%', height: '100%', borderRadius: 15, }}>
                     <View style={{ ...theme, borderWidth: 0.5, padding: 20, margin: 10, borderRadius: 15, justifyContent: 'center', alignItems: 'center' }}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
