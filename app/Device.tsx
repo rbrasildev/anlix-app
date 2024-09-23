@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Text, View, TouchableOpacity, ActivityIndicator, Alert, useColorScheme, Clipboard, RefreshControl, FlatList, SafeAreaView } from "react-native";
-import { auth } from "@/constants/Auth";
+import { Text, View, TouchableOpacity, ActivityIndicator, useColorScheme, Clipboard, RefreshControl, FlatList } from "react-native";
+
+import config from "./config";
+import getDeviceData from "./services/getDeviceData";
+
+interface DeviceProps {
+    _id: string;
+    pppoe_user: string;
+    model: string;
+    use_tr069: boolean;
+}
 
 export default function Device() {
-    const [dataMac, setDataMac] = useState([]);
+    const [dataMac, setDataMac] = useState<DeviceProps[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false)
 
@@ -30,14 +39,7 @@ export default function Device() {
     const handleResetDefault = async () => {
         setIsLoading(true);
         try {
-            const response = await fetch(`${auth.url_anlix}/api/v2/device/get`, {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Basic ' + btoa(auth.username + ':' + auth.password)
-                },
-                body: JSON.stringify({ "fields": "_id,pppoe_user,model,use_tr069" })
-            }).then((response) => response.json())
+            const response = await getDeviceData()
             setDataMac(response);
         } catch (error) {
             console.log(error)
@@ -62,10 +64,9 @@ export default function Device() {
 
         <FlatList
             data={resetdefaults}
-            keyExtractor={(item) => item._id}
+            keyExtractor={(item) => String(item._id)}
             renderItem={({ item, index }) =>
                 <View
-                    key={item._id}
                     style={{
                         ...theme,
                         marginTop: 4,
@@ -124,8 +125,8 @@ export default function Device() {
                 <RefreshControl
                     refreshing={refreshing}
                     onRefresh={handleRefresh}
-                    colors={['#1E90FF']} // Cor do indicador de atualização
-                    tintColor={'#1E90FF'} // Cor de fundo do indicador de atualização no iOS
+                    colors={['#1E90FF']}
+                    tintColor={'#1E90FF'}
                 />
             }
             ListEmptyComponent={
@@ -134,7 +135,7 @@ export default function Device() {
                         <ActivityIndicator style={{ marginTop: '80%' }} size="large" color="#fff" />
                     ) : (
                         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                            <Text style={{ ...theme, backgroundColor: 'transparent', marginTop: 250, fontSize: 18 }}>Nenhum registro</Text>
+                            <Text style={{ color: theme.color, marginTop: 250, fontSize: 18 }}>Nenhum registro</Text>
                         </View>
                     )}
                 </View>

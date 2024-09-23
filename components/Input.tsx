@@ -1,37 +1,36 @@
-// Input.js
-import React from 'react';
-import { TextInput, StyleSheet, View, Text } from 'react-native';
+import { TextInput, TextInputProps, useColorScheme } from "react-native";
 
-const Input = ({ label, value, onChangeText, placeholder, secureTextEntry }) => {
-    return (
-        <View style={styles.container}>
-            {label && <Text style={styles.label}>{label}</Text>}
-            <TextInput
-                style={styles.input}
-                value={value}
-                onChangeText={onChangeText}
-                placeholder={placeholder}
-                secureTextEntry={secureTextEntry}
-            />
-        </View>
-    );
-};
+export default function Input({ ...rest }: TextInputProps) {
+    const scheme = useColorScheme();
 
-const styles = StyleSheet.create({
-    container: {
-        marginVertical: 10,
-    },
-    label: {
-        marginBottom: 5,
-        fontSize: 16,
-    },
-    input: {
-        height: 40,
-        borderColor: 'gray',
-        borderWidth: 1,
-        paddingHorizontal: 10,
-        borderRadius: 5,
-    },
-});
 
-export default Input;
+    const lightTheme = {
+        textColor: '#000',
+        color: '#141414',
+        backgroundColor: '#fff',
+        borderColor: '#ddd'
+    };
+
+    const darkTheme = {
+        textColor: '#ccc',
+        color: '#ccc',
+        borderColor: '#222',
+        backgroundColor: '#141414'
+    };
+
+    const theme = scheme === 'light' ? lightTheme : darkTheme;
+    return <TextInput
+        placeholderTextColor={'#666'}
+        style={{
+            ...theme,
+            borderRadius: 15,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginVertical:5,
+            paddingHorizontal:15,
+            padding:16,
+            fontSize: 18,
+            borderWidth: 1,
+        }}  {...rest} />
+
+}

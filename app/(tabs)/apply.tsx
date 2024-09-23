@@ -1,14 +1,22 @@
-import React, { useState } from "react";
-import { View, Text, Alert, TextInput, TouchableOpacity, KeyboardAvoidingView, ActivityIndicator, useColorScheme } from "react-native";
+import React, { useRef, useState } from "react";
+import { View, Text, TouchableOpacity, KeyboardAvoidingView, ActivityIndicator, useColorScheme } from "react-native";
 import { useRouter } from 'expo-router';
 import { StyleSheet } from "react-native";
-import { auth } from "@/constants/Auth";
+
+import Toast from "react-native-toast-message";
+import Input from "@/components/Input";
+import getSgpData from "../services/getSgpData";
+import * as Animatable from 'react-native-animatable';
+import { SlideInLeft } from "react-native-reanimated";
+import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 
 export default function Apply() {
     const [pppoe, setPppoe] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-
+    const [contratoData, setContratoData] = useState([])
+    const bottomSheetRef = useRef<BottomSheet>(null);
     const router = useRouter()
     const scheme = useColorScheme();
 
@@ -26,76 +34,144 @@ export default function Apply() {
 
     const theme = scheme === 'light' ? lightTheme : darkTheme;
 
-    const getDataSgp = async () => {
+
+    async function handleDataSgp() {
+        setIsLoading(true)
         try {
-            setIsLoading(true);
-            const response = await fetch(`${auth.url_sgp}/api/api.php?login=${pppoe}`).then((response) => response.json())
-            console.log(response)
+
+            const response = await getSgpData(pppoe)
+            setContratoData(response.contratos);
 
             if (pppoe === "") {
-                Alert.alert(
-                    "Atenção",
-                    "Este campo não pode ser vazio verme!",
-                );
+                Toast.show({
+                    type: 'info',
+                    text1: 'Este campo não pode ser vazio seu verme!'
+                })
                 setIsLoading(false);
                 return;
             }
 
-            if (!response.login) {
-                Alert.alert(
-                    "Falha ao buscar dados",
-                    "Cliente não encontrado!",
-                );
+            if (response.contratos == false) {
+                Toast.show({
+                    type: 'error',
+                    text1: `Não conseguimos localizar esse cpf ${pppoe}`
+                })
                 setIsLoading(false);
                 return;
             }
 
-            router.push({
-                pathname: "Cliente",
-                params: { cpf: pppoe }
-            });
+            if (response.contratos.length > 1) {
+                bottomSheetRef.current?.expand()
+            } else {
+                router.push({
+                    pathname: "/Cliente",
+                    params: {
+                        clienteId: response.contratos[0].clienteId,
+                        contratoId: response.contratos[0].contratoId,
+                        razaoSocial: response.contratos[0].razaoSocial,
+                        servico_wifi_password: response.contratos[0].servico_wifi_password,
+                        servico_wifi_password_5: response.contratos[0].servico_wifi_password_5,
+                        servico_wifi_ssid: response.contratos[0].servico_wifi_ssid,
+                        servico_wifi_ssid_5: response.contratos[0].servico_wifi_ssid_5,
+                        servico_login: response.contratos[0].servico_login,
+                        servico_senha: response.contratos[0].servico_senha
+                    }
+                });
 
-            setIsLoading(false);
+            }
+
         } catch (error) {
-            console.log(error);
+            console.log(error)
+            Toast.show({
+                type: 'error',
+                text1: `Error${error}`
+            })
+        } finally {
             setIsLoading(false);
-            Alert.alert("Erro", "Ocorreu um erro ao buscar os dados.");
         }
     }
 
-    return (
-        <View style={styles.container}>
-            <KeyboardAvoidingView behavior="position" enabled>
-                <Text style={{ fontSize: 32, color: '#4CB752' }}>Anlix apply</Text>
+    function handleContractSelected(id) {
+        const response = contratoData.filter((item) => item.contratoId === id)
 
-                <Text style={{ fontSize: 20, color: "#d0d0d0", fontWeight: 'bold' }}>PPPoE</Text>
-                <TextInput
-                    style={{
-                        ...theme,
-                        height: 60,
-                        borderRadius: 10,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginTop: 10,
-                        marginBottom: 10,
-                        paddingLeft: 20,
-                        fontSize: 20,
-                        borderWidth: 1,
-                    }}
+        router.push({
+            pathname: "/Cliente",
+            params: {
+                clienteId: response[0].clienteId,
+                contratoId: response[0].contratoId,
+                razaoSocial: response[0].razaoSocial,
+                servico_wifi_password: response[0].servico_wifi_password,
+                servico_wifi_password_5: response[0].servico_wifi_password_5,
+                servico_wifi_ssid: response[0].servico_wifi_ssid,
+                servico_wifi_ssid_5: response[0].servico_wifi_ssid_5,
+                servico_login: response[0].servico_login,
+                servico_senha: response[0].servico_senha
+            }
+        });
+    }
+
+    const contracts = (item) => {
+        return (
+            <TouchableOpacity
+                onPress={() => handleContractSelected(item.contratoId)}
+                className="bg-gray-100 p-4 border border-gray-100 gap-2 rounded-md"
+            >
+                <View>
+                    <Text className="text-slate-900 font-bold text-lg">{item.razaoSocial}</Text>
+                    <Text className="text-slate-900 font-light">{item.planointernet}</Text>
+                </View>
+                <View>
+                    <View className="flex-row items-center gap-2">
+                        <MaterialCommunityIcons name="account" size={16} />
+                        <Text className="text-slate-900 font-medium">{item.servico_login}</Text>
+                    </View>
+                    <View className="flex-row items-center gap-2">
+                        <MaterialCommunityIcons name="wifi" size={16} />
+                        <Text className="text-slate-900 font-medium">{item.servico_wifi_ssid}</Text>
+                    </View>
+
+                </View>
+                <View className="border-[0.5px] border-gray-200 my-2 px-10" />
+            </TouchableOpacity>
+        )
+
+    }
+
+    return (
+        <Animatable.View animation={'slideInLeft'} style={styles.container}>
+            <KeyboardAvoidingView behavior="position" enabled>
+                <Text className="text-bg-green-500 text-3xl font-medium uppercase">Anlix apply</Text>
+
+                <Text className="font-light text-slate-100 text-2xl">CPF/CNPJ</Text>
+                <Input
                     placeholderTextColor="#87949D"
-                    placeholder="Digite login pppoe"
+                    placeholder="Digite CPF do cliente"
                     value={pppoe}
                     onChangeText={setPppoe}
                     autoCapitalize={"none"}
+                    keyboardType="numeric"
                 />
-                <TouchableOpacity style={styles.button} onPress={getDataSgp}>
-                    <Text style={{ fontSize: 20, fontWeight: 'medium' }}>Enviar</Text>
-                    <View style={{ marginLeft: 10 }}>
+
+                <TouchableOpacity style={styles.button} onPress={handleDataSgp}>
+                    <Text className="font-medium text-slate-200">Enviar</Text>
+                    <View style={{ width: 32 }}>
                         {isLoading && <ActivityIndicator size="small" color="#fff" />}
                     </View>
                 </TouchableOpacity>
             </KeyboardAvoidingView>
-        </View>
+            <BottomSheet
+                ref={bottomSheetRef}
+                snapPoints={[0.01, '50%', '100%']}
+            >
+                <Text className='text-2xl font-light m-4 text-center text-gray-800'>contratos</Text>
+                <BottomSheetFlatList className='p-4'
+                    data={contratoData}
+                    keyExtractor={(item) => String(item.contratoId)}
+                    renderItem={({ item }) => contracts(item)}
+                >
+                </BottomSheetFlatList>
+            </BottomSheet>
+        </Animatable.View>
     )
 }
 
