@@ -84,6 +84,7 @@ export default function Device() {
                             borderRadius: 10,
                             marginHorizontal: 15,
                             borderWidth: 1,
+                            marginTop: 10,
                         }}>
                         <View style={{
                             ...theme,

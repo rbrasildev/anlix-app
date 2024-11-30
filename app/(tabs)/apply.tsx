@@ -22,7 +22,7 @@ export default function Apply() {
     const scheme = useColorScheme();
 
     const lightTheme = {
-        backgroundColor: '#fff',
+        backgroundColor: '#fafaf5',
         textColor: '#000',
         borderColor: '#ccc',
     };
@@ -31,6 +31,7 @@ export default function Apply() {
         textColor: '#fff',
         color: '#87949D',
         borderColor: '#333',
+        backgroundColor: '#212121'
     };
 
     const theme = scheme === 'light' ? lightTheme : darkTheme;
@@ -116,24 +117,24 @@ export default function Apply() {
             <Animatable.View duration={300 * index} animation={'slideInUp'}>
                 <TouchableOpacity
                     onPress={() => handleContractSelected(item.contratoId)}
-                    className="bg-gray-100 p-4 border border-gray-100 gap-2 rounded-md"
+                    className="dark:bg-zinc-900 bg-zinc-50 p-4 border border-zinc-300 dark:border-zinc-800 gap-2 rounded-3xl"
                 >
                     <View>
-                        <Text className="text-slate-900 font-bold text-lg">{item.razaoSocial}</Text>
-                        <Text className="text-slate-900 font-light">{item.planointernet}</Text>
+                        <Text className="dark:text-zinc-500 font-extrabold text-lg">Contrato: {item.contratoId}</Text>
+                        <Text className="dark:text-zinc-500 font-bold text-lg">{item.razaoSocial}</Text>
+                        <Text className="dark:text-zinc-600 text-slate-900 font-light">{item.planointernet}</Text>
                     </View>
                     <View>
                         <View className="flex-row items-center gap-2">
-                            <MaterialCommunityIcons name="account" size={16} />
-                            <Text className="text-slate-900 font-medium">{item.servico_login}</Text>
+                            <MaterialCommunityIcons color={theme.textColor} name="account" size={16} />
+                            <Text className="text-slate-900 dark:text-zinc-600 font-medium">{item.servico_login}</Text>
                         </View>
                         <View className="flex-row items-center gap-2">
-                            <MaterialCommunityIcons name="wifi" size={16} />
-                            <Text className="text-slate-900 font-medium">{item.servico_wifi_ssid}</Text>
+                            <MaterialCommunityIcons color={theme.textColor} name="wifi" size={16} />
+                            <Text className="text-zinc-800 dark:text-zinc-600 font-medium">{item.servico_wifi_ssid}</Text>
                         </View>
 
                     </View>
-                    <View className="border-[0.5px] border-gray-200 my-2 px-10" />
                 </TouchableOpacity>
             </Animatable.View>
         )
@@ -164,10 +165,12 @@ export default function Apply() {
             </KeyboardAvoidingView>
             <BottomSheet
                 ref={bottomSheetRef}
-                snapPoints={[0.01, '50%', '100%']}
+                snapPoints={[0.01, '50%', '95%']}
+                backgroundStyle={{ backgroundColor: theme.backgroundColor }}
             >
-                <Text className='text-2xl font-light m-4 text-center text-gray-800'>contratos</Text>
+                <Text className='text-2xl font-bold m-4 text-start text-gray-800 dark:text-gray-100'>SELECIONE O CONTRATO</Text>
                 <BottomSheetFlatList className='p-4'
+                    contentContainerClassName={"gap-2"}
                     data={contratoData}
                     keyExtractor={(item: ContratoProps) => String(item.contratoId)}
                     renderItem={({ item, index }) => contracts(item, index)}

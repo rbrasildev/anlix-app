@@ -64,6 +64,10 @@ export default function RootLayout() {
     return null;
   }
 
+  function navigateToDevice() {
+    router.push('/Device');
+  }
+
   return (
 
     <GestureHandlerRootView>
@@ -81,9 +85,7 @@ export default function RootLayout() {
             headerRight: () => (
               <TouchableOpacity
                 onPress={() => {
-                  router.push({
-                    pathname: '/Device'
-                  })
+                  router.push('/Device')
                 }}
               >
                 <MaterialIcons name="search" size={32} color="#87949D" />
