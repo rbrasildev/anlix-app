@@ -153,10 +153,10 @@ export default function Cliente<UserSgpProps>() {
                         <View style={{ flexDirection: 'row', gap: 5 }}>
                             <MaterialCommunityIcons
                                 name={'account'}
-                                size={24}
+                                size={20}
                                 color='#4CB752'
                             />
-                            <Text style={{ ...theme, fontWeight: "600", fontSize: 20, maxWidth: '95%' }}>{razaoSocial}</Text>
+                            <Text style={{ ...theme, fontWeight: "600", fontSize: 18, maxWidth: '95%' }}>{razaoSocial}</Text>
                         </View>
                         <Text style={{ ...theme, marginLeft: 28 }}>Usuário PPPoE: {servico_login}</Text>
                     </View>
@@ -280,15 +280,14 @@ export default function Cliente<UserSgpProps>() {
                         }}>
                             <TextInput style={{
                                 ...theme,
-                                marginVertical: 10,
+                                marginVertical: 2,
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 flex: 1,
                                 paddingHorizontal: 15,
                                 fontSize: 20,
-                                backgroundColor: 'transparent'
-
-
+                                backgroundColor: 'transparent',
+                                paddingVertical:10,
                             }}
                                 placeholderTextColor="#87949D"
                                 value={macAddress}
@@ -315,7 +314,7 @@ export default function Cliente<UserSgpProps>() {
                         <TouchableOpacity style={styles.button}
                             onPress={callGetMac}
                         >
-                            <Text style={{ fontSize: 20, fontWeight: '500' }}>Gerenciar CPE</Text>
+                            <Text className='font-semibold text-xl text-zinc-100'>Gerenciar CPE</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

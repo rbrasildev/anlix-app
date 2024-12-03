@@ -21,6 +21,7 @@ export default function Input({ ...rest }: TextInputProps) {
     const theme = scheme === 'light' ? lightTheme : darkTheme;
     return <TextInput
         placeholderTextColor={'#666'}
+        className=""
         style={{
             ...theme,
             borderRadius: 15,
@@ -29,7 +30,7 @@ export default function Input({ ...rest }: TextInputProps) {
             marginVertical:5,
             paddingHorizontal:15,
             padding:16,
-            fontSize: 18,
+            fontSize: 16,
             borderWidth: 1,
         }}  {...rest} />
 
