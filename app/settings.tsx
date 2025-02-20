@@ -143,7 +143,7 @@ export default function Settings() {
     return (
         <KeyboardAvoidingView behavior="position" style={{ ...theme, flex: 1, padding: 15 }}>
             <ScrollView>
-                <View style={{ padding: 15, borderRadius: 15, }}>
+                <View style={{ borderRadius: 15, marginTop: 60 }}>
                     <View style={{ ...theme, flexDirection: 'row', justifyContent: 'space-between' }}>
                         <Text style={{ fontSize: 22, color: theme.color }}>Dados do SGP</Text>
                         <TouchableOpacity onPress={() => removeConfig()} style={{ ...theme, borderRadius: 10, padding: 10, flexDirection: 'row', borderWidth: 1, gap: 4, alignItems: 'center' }}>
@@ -217,20 +217,20 @@ export default function Settings() {
                             secureTextEntry={true}
                         />
                     </View>
+                    <TouchableOpacity
+                        onPress={() => handleSaveData()}
+                        style={{
+                            ...theme,
+                            paddingVertical: 15,
+                            borderRadius: 15,
+                            borderWidth: 0.5,
+                            backgroundColor: '#4CB752',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}>
+                        <Text style={{ fontSize: 18, fontWeight: '500' }}>Salvar</Text>
+                    </TouchableOpacity>
                 </View>
-                <TouchableOpacity
-                    onPress={() => handleSaveData()}
-                    style={{
-                        ...theme,
-                        paddingVertical: 15,
-                        borderRadius: 15,
-                        borderWidth: 0.5,
-                        backgroundColor: '#4CB752',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    }}>
-                    <Text style={{ fontSize: 18, fontWeight: '500' }}>Salvar</Text>
-                </TouchableOpacity>
             </ScrollView>
             <Toast />
         </KeyboardAvoidingView>

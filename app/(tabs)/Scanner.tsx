@@ -68,7 +68,7 @@ export default function Device() {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
+        <View style={{ flex: 1, justifyContent: 'center' }}>
             <FlatList
                 data={resetdefaults}
                 keyExtractor={(item) => item._id}
@@ -83,8 +83,8 @@ export default function Device() {
                             padding: 5,
                             borderRadius: 10,
                             marginHorizontal: 15,
+                            marginTop:10,
                             borderWidth: 1,
-                            marginTop: 10,
                         }}>
                         <View style={{
                             ...theme,
@@ -147,6 +147,6 @@ export default function Device() {
                     </View>
                 }
             />
-        </SafeAreaView>
+        </View>
     );
 }
