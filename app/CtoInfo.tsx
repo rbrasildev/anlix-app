@@ -17,7 +17,7 @@ export default function Cto() {
         textColor: '#000',
         borderColor: '#ddd',
         color: '#333',
-        backgroundColor: '#fff',
+        backgroundColor: '#f3f3f4',
     };
 
     const darkTheme = {
@@ -51,7 +51,7 @@ export default function Cto() {
     return (
         <View style={{ flex: 3, padding: 10 }}>
             <FlatList
-                style={{ padding: 5 }}
+                style={{ padding: 5, gap:4 }}
                 data={data}
                 refreshControl={
                     <RefreshControl
@@ -73,10 +73,10 @@ export default function Cto() {
                         </View>
                         <View style={{ flexDirection: 'row', gap: 10 }}>
                             <View style={{ alignItems: 'center', justifyContent: 'center', borderRadius: 20 }}>
-                                <Text className="font-bold text-gray-400"><MaterialCommunityIcons size={16} name="image-filter-frames" /> Ocupadas ({totalClientes})</Text>
+                                <Text className="font-bold text-zic-400 dark:text-gray-400"><MaterialCommunityIcons size={16} name="image-filter-frames" /> Ocupadas ({totalClientes})</Text>
                             </View>
                             <View style={{ alignItems: 'center', justifyContent: 'center', borderRadius: 20 }}>
-                                <Text className="font-bold text-gray-400"><MaterialCommunityIcons size={16} name="image-filter-frames" /> Livres ({16 - totalClientes})</Text>
+                                <Text className="font-bold text-zic-400 dark:text-gray-400"><MaterialCommunityIcons size={16} name="image-filter-frames" /> Livres ({16 - totalClientes})</Text>
                             </View>
                         </View>
                     </View>
@@ -85,15 +85,10 @@ export default function Cto() {
                     <Animatable.View
                         animation={'fadeInUp'}
                         duration={300 * index}
-                        style={{
-                            ...theme,
-                            borderRadius: 15,
-                            padding: 10,
-                            borderWidth: 0.5,
-                            marginBottom: 4
-                        }}>
-                        <View>
-                            <Text className="font-bold mb-2 text-slate-500">{item.nome}</Text>
+                        className="bg-zinc-50 dark:bg-zinc-950 rounded-2xl mb-2"
+                    >
+                        <View className="p-4">
+                            <Text className="font-bold mb-2 text-zinc-800 dark:text-zinc-500">{item.nome}</Text>
 
                             <Text style={{
                                 paddingLeft: 5,

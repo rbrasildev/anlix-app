@@ -31,7 +31,7 @@ export default function HomeScreen() {
     const darkTheme = {
         textColor: '#fff',
         color: '#ccc',
-        borderColor: '#ccc',
+        borderColor: '#333',
     };
 
     const theme = scheme === 'light' ? lightTheme : darkTheme;

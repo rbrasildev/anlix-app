@@ -7,6 +7,7 @@ import { useRouter } from "expo-router";
 import * as Animatable from 'react-native-animatable';
 import Toast from "react-native-toast-message";
 import config from "../config";
+import Input from "@/components/Input";
 
 
 export default function App() {
@@ -78,28 +79,14 @@ export default function App() {
                     />
                     <Text className="font-semibold text-gray-500 text-xl uppercase my-4">IDENTIFICAÇÃO DA CTO</Text>
                 </View>
-                <TextInputMask
-                    style={{
-                        ...theme,
-                        borderRadius: 15,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginVertical: 5,
-                        paddingHorizontal: 15,
-                        padding: 16,
-                        fontSize: 18,
-                        borderWidth: 1
-                    }}
+                <Input
                     placeholder="EX: XX-XX-0000"
                     placeholderTextColor="#666"
                     value={ctoIdent}
                     autoCapitalize="characters"
                     onChangeText={setCtoIdent}
-                    type={'custom'}
-                    options={{
-                        mask: 'AA-AA-9999'
-                    }}
                 />
+                
                 <TouchableOpacity
                     onPress={navigateToCto}
                     style={styles.button}>

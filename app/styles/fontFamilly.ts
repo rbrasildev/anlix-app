@@ -1,4 +1,4 @@
-export const fontFamilly = {
+ const fontFamilly = {
     thin: "Inter_100Thin",
     light: "Inter_300Light",
     regular: "Inter_400Regular",
@@ -8,3 +8,5 @@ export const fontFamilly = {
     extrabold: "Inter_800ExtraBold",
     black: "Inter_900Black"
 }
+
+export default fontFamilly;

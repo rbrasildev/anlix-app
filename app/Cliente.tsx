@@ -6,6 +6,7 @@ import { useGlobalSearchParams, useRouter } from "expo-router";
 import * as Clipboard from 'expo-clipboard';
 import Toast from 'react-native-toast-message';
 import config from './config';
+import Button from '@/components/Button';
 
 
 
@@ -142,184 +143,153 @@ export default function Cliente<UserSgpProps>() {
 
         <KeyboardAvoidingView
             behavior="position"
-            enabled>
+            enabled
+            className='px-4 pt-2'
+        >
 
-            <ScrollView>
+            <View style={{ ...theme, padding: 15, borderWidth: 1, borderRadius: 15 }}>
+                <View style={{ flexDirection: 'row', gap: 5 }}>
+                    <MaterialCommunityIcons
+                        name={'account'}
+                        size={24}
+                        color='#4CB752'
+                    />
+                    <Text style={{ ...theme, fontWeight: "600", fontSize: 20, maxWidth: '95%' }}>{razaoSocial}</Text>
+                </View>
+                <Text style={{ ...theme, marginLeft: 28 }}>Usuário PPPoE: {servico_login}</Text>
+            </View>
+
+            <View className='gap-2' style={{ ...theme, borderWidth: 1, borderRadius: 15, padding: 15, marginVertical: 10 }}>
+                <View style={{ flexDirection: 'row', gap: 5 }}>
+                    <MaterialCommunityIcons
+                        name={'wifi'}
+                        size={24}
+                        color='#4CB752'
+                    />
+                    <Text style={{ ...theme, fontSize: 20 }}> 2.4Ghz Network</Text>
+                </View>
+
+                <View className='flex-row items-center gap-2'>
+                    <View style={{ flex: 1, marginTop: 3 }}>
+                        {/* <Text style={{ ...theme, color: '#333' }}>Network name</Text> */}
+                        <TextInput
+                            className='justify-center items-center py-2 text-lg dark:bg-zinc-800 rounded-xl px-4 dark:text-zinc-400 bg-zinc-100 border border-zinc-300 dark:border-zinc-900'
+                            value={servicoWifiSsid}
+                            onChangeText={setServicoWifiSsid}
+                        />
+                    </View>
+
+                    <TouchableOpacity
+                        style={{ padding: 4, borderRadius: 4, alignItems: 'center', justifyContent: 'center' }}
+                        onPress={() => copyToClipboard(servicoWifiSsid)}
+                    >
+                        <MaterialCommunityIcons
+                            style={{ ...theme }}
+                            name={iconCopy}
+                            size={28}
+                        />
+                    </TouchableOpacity>
+                </View>
+
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 4 }}>
+                    <View style={{ flex: 1 }}>
+                        {/* <Text style={{ ...theme, color: '#333', marginBottom: 2 }}>Password</Text> */}
+                        <TextInput
+                            className='justify-center items-center py-2 text-lg dark:bg-zinc-800 rounded-xl px-4 dark:text-zinc-400 bg-zinc-100 border border-zinc-300 dark:border-zinc-900'
+                            value={servicoWifiPassword}
+                            onChangeText={setServicoWifiPassword}
+                        />
+                    </View>
+                    <TouchableOpacity
+                        style={{ padding: 4, borderRadius: 4 }}
+                        onPress={() => copyToClipboard(servicoWifiPassword)}
+                    >
+                        <MaterialCommunityIcons
+                            style={{ ...theme }}
+                            name={iconCopy}
+                            size={28}
+                        />
+
+                    </TouchableOpacity>
+                </View>
+            </View>
+
+
+
+            <View style={{ ...theme, borderWidth: 1, borderRadius: 15, padding: 15 }}>
+                <View className='flex-row gap-2 mb-2'>
+                    <MaterialCommunityIcons
+                        name={'wifi'}
+                        size={24}
+                        color='#4CB752'
+                    />
+                    <Text style={{ ...theme, fontSize: 20 }}> 5 GHz Network</Text>
+                </View>
+                <Text style={{ ...theme, color: '#333' }}>Network name</Text>
+                <TextInput
+                    className='justify-center items-center py-2 text-lg dark:bg-zinc-800 rounded-xl px-4 dark:text-zinc-400 bg-zinc-100 border border-zinc-300 dark:border-zinc-900'
+                    value={servicoWifiSsid5}
+                    onChangeText={setServicoWifiSsid5}
+                />
+                <Text style={{ ...theme, color: '#333', marginTop: 2 }}>Password</Text>
+                <TextInput
+                    className='justify-center items-center py-2 text-lg dark:bg-zinc-800 rounded-xl px-4 dark:text-zinc-400 bg-zinc-100 border border-zinc-300 dark:border-zinc-900'
+                    value={servicoWifiPassword5}
+                    onChangeText={setServicoWifiPassword5}
+
+                />
+            </View>
+
+            <View>
+                <View style={{
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    flexDirection: "row",
+                }}>
+
+                </View>
 
                 <View style={{
-                    padding: 15,
+                    ...theme,
+                    flexDirection: 'row',
+                    padding: 5,
+                    alignItems: 'center',
+                    borderWidth: 1,
+                    borderRadius: 15,
+                    marginVertical: 10,
                 }}>
-                    <View style={{ ...theme, padding: 15, borderWidth: 1, borderRadius: 15 }}>
-                        <View style={{ flexDirection: 'row', gap: 5 }}>
+                    <TextInput
+                        className='px-4 text-xl dark:text-zinc-100 text-zinc-800 flex-1'
+                        style={{ fontSize: 18 }}
+                        placeholderTextColor="#87949D"
+                        value={macAddress}
+                        onChangeText={handleInputChange}
+                        placeholder="Digite o endereço MAC"
+                        keyboardType="ascii-capable"
+                        maxLength={17}
+                    >
+                    </TextInput>
+                    {macAddress && (
+                        <TouchableOpacity
+                            onPress={() => setMacAddress('')}
+                            style={{ padding: 4 }}>
+
                             <MaterialCommunityIcons
-                                name={'account'}
-                                size={24}
-                                color='#4CB752'
+                                style={{ padding: 3 }}
+                                color={'#666'}
+                                size={25}
+                                name='close-octagon'
                             />
-                            <Text style={{ ...theme, fontWeight: "600", fontSize: 20, maxWidth: '95%' }}>{razaoSocial}</Text>
-                        </View>
-                        <Text style={{ ...theme, marginLeft: 28 }}>Usuário PPPoE: {servico_login}</Text>
-                    </View>
-
-                    <View style={{ ...theme, borderWidth: 1, borderRadius: 15, padding: 15, marginVertical: 10 }}>
-
-                        <View style={{ flexDirection: 'row', gap: 5 }}>
-                            <MaterialCommunityIcons
-                                name={'wifi'}
-                                size={24}
-                                color='#4CB752'
-                            />
-                            <Text style={{ ...theme, fontSize: 20 }}> 2.4Ghz Network</Text>
-                        </View>
-
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <View style={{ flex: 1, marginTop: 3 }}>
-                                <Text style={{ ...theme, color: '#333' }}>Network name</Text>
-                                <TextInput
-                                    style={{ ...theme, fontSize: 20, borderRadius: 8, marginVertical: 5 }}
-                                    value={servicoWifiSsid}
-                                    onChangeText={setServicoWifiSsid}
-                                />
-                            </View>
-                            <TouchableOpacity
-                                style={{ padding: 4, borderRadius: 4, alignItems: 'center', justifyContent: 'center' }}
-                                onPress={() => copyToClipboard(servicoWifiSsid)}
-                            >
-                                <Text style={{ ...theme }}>
-                                    <MaterialCommunityIcons
-                                        style={{ ...theme }}
-                                        name={iconCopy}
-                                        size={28}
-                                    />
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <View style={{ flex: 1 }}>
-                                <Text style={{ ...theme, color: '#333', marginBottom: 2 }}>Password</Text>
-                                <TextInput
-                                    style={{ ...theme, fontSize: 20 }}
-                                    value={servicoWifiPassword}
-                                    onChangeText={setServicoWifiPassword}
-                                />
-                            </View>
-                            <TouchableOpacity
-                                style={{ padding: 4, borderRadius: 4 }}
-                                onPress={() => copyToClipboard(servicoWifiPassword)}
-                            >
-                                <Text style={{ ...theme }}>
-                                    <MaterialCommunityIcons
-                                        style={{ ...theme }}
-                                        name={iconCopy}
-                                        size={28}
-                                    />
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-
-
-
-                    <View style={{ ...theme, borderWidth: 1, borderRadius: 15, padding: 15 }}>
-                        <View style={{ flexDirection: 'row', gap: 5, marginBottom: 5, }}>
-                            <MaterialCommunityIcons
-                                name={'wifi'}
-                                size={24}
-                                color='#4CB752'
-                            />
-                            <Text style={{ ...theme, fontSize: 20 }}> 5 GHz Network</Text>
-                        </View>
-                        <Text style={{ ...theme, color: '#333' }}>Network name</Text>
-                        <TextInput
-                            style={{
-                                ...theme,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                paddingVertical: 5,
-                                fontSize: 20,
-                            }}
-                            value={servicoWifiSsid5}
-                            onChangeText={setServicoWifiSsid5}
-
-                        />
-                        <Text style={{ ...theme, color: '#333', marginTop: 2 }}>Password</Text>
-                        <TextInput
-                            style={{
-                                ...theme,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                paddingVertical: 5,
-                                marginBottom: 3,
-                                fontSize: 20,
-                            }}
-                            value={servicoWifiPassword5}
-                            onChangeText={setServicoWifiPassword5}
-
-                        />
-                    </View>
-
-                    <View>
-                        <View style={{
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            flexDirection: "row",
-                        }}>
-
-                        </View>
-
-                        <View style={{
-                            ...theme,
-                            flexDirection: 'row',
-                            padding: 5,
-                            alignItems: 'center',
-                            borderWidth: 1,
-                            borderRadius: 15,
-                            marginVertical: 10,
-
-                        }}>
-                            <TextInput style={{
-                                ...theme,
-                                marginVertical: 10,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                flex: 1,
-                                paddingHorizontal: 15,
-                                fontSize: 20,
-                                backgroundColor: 'transparent'
-
-
-                            }}
-                                placeholderTextColor="#87949D"
-                                value={macAddress}
-                                onChangeText={handleInputChange}
-                                placeholder="Digite o endereço MAC"
-                                keyboardType="ascii-capable"
-                            >
-                            </TextInput>
-                            {macAddress && (
-                                <TouchableOpacity
-                                    onPress={() => setMacAddress('')}
-                                    style={{ padding: 4 }}>
-
-                                    <MaterialCommunityIcons
-                                        style={{ padding: 3 }}
-                                        color={'#666'}
-                                        size={25}
-                                        name='close-octagon'
-                                    />
-                                </TouchableOpacity>
-                            )}
-                        </View>
-
-                        <TouchableOpacity style={styles.button}
-                            onPress={callGetMac}
-                        >
-                            <Text style={{ fontSize: 20, fontWeight: '500' }}>Gerenciar CPE</Text>
                         </TouchableOpacity>
-                    </View>
+                    )}
                 </View>
-            </ScrollView>
+
+                <TouchableOpacity style={styles.button}
+                    onPress={callGetMac}
+                >
+                    <Text style={{ fontSize: 20, fontWeight: '500' }}>Gerenciar CPE</Text>
+                </TouchableOpacity>
+            </View>
         </KeyboardAvoidingView >
     )
 }
