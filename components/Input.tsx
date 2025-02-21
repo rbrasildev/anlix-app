@@ -1,37 +1,11 @@
-import { TextInput, TextInputProps, useColorScheme } from "react-native";
+import { TextInput, TextInputProps } from "react-native";
 
 export default function Input({ ...rest }: TextInputProps) {
-    const scheme = useColorScheme();
 
 
-    const lightTheme = {
-        textColor: '#000',
-        color: '#141414',
-        backgroundColor: '#fff',
-        borderColor: '#ddd'
-    };
-
-    const darkTheme = {
-        textColor: '#ccc',
-        color: '#ccc',
-        borderColor: '#222',
-        backgroundColor: '#141414'
-    };
-
-    const theme = scheme === 'light' ? lightTheme : darkTheme;
     return <TextInput
         placeholderTextColor={'#666'}
-        className=""
-        style={{
-            ...theme,
-            borderRadius: 15,
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginVertical:5,
-            paddingHorizontal:15,
-            padding:16,
-            fontSize: 16,
-            borderWidth: 1,
-        }}  {...rest} />
+        className="bg-zinc-50 border border-zinc-200 dark:bg-zinc-900 dark:text-zinc-500 text-zinc-800 text-xl rounded-2xl justify-center items-center py-5 px-6 font-semibold w-full"
+        {...rest} />
 
 }

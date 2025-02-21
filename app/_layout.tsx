@@ -109,6 +109,15 @@ export default function RootLayout() {
             }}
           />
 
+          <Stack.Screen name="vehicle/Details"
+            options={{
+              headerShown: true,
+              headerTitle: 'Informações da CTO',
+              headerTintColor: '#666',
+
+            }}
+          />
+
         </Stack>
       </ThemeProvider>
       <Toast />

@@ -68,13 +68,13 @@ export default function Vehicle() {
                             pathname: '/vehicle/details/[id]',
                             params: { id: item.id },
                         }}
-                        className="flex gap-2 flex-row justify-between bg-white dark:bg-gray-900 p-4 space-y-1 mt-2 rounded-3xl m-2 shadow">
+                        className="flex gap-2 flex-row justify-between bg-white dark:bg-zinc-900 p-4 space-y-1 mt-2 rounded-3xl m-2 shadow">
                         <View>
                             <Text className="text-black dark:text-white font-bold">{item.marca + " " + item.modelo}</Text>
                             <Text className="dark:text-white text-black">Placa: {item.placa}</Text>
-                            <Text className="text-gray-500 dark:text-white">KM Atual: {item.quilometragem}</Text>
-                            <Text className="text-gray-500 dark:text-white">Última troca: {item.km_ultima_troca}</Text>
-                            <Text className="text-gray-500 dark:text-white">
+                            <Text className="text-zinc-500 dark:text-white">KM Atual: {item.quilometragem}</Text>
+                            <Text className="text-zinc-500 dark:text-white">Última troca: {item.km_ultima_troca}</Text>
+                            <Text className="text-zinc-500 dark:text-white">
                                 Próxima troca: {item.tipo === "carro" ? item.km_ultima_troca + 5000 : item.km_ultima_troca + 1000}
                             </Text>
                         </View>
