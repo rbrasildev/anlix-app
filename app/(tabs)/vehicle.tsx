@@ -1,4 +1,5 @@
 import Input from "@/components/Input";
+import { Link } from "expo-router";
 import { useEffect, useState } from "react";
 import { View, Text, FlatList, Image, ActivityIndicator, TouchableOpacity } from "react-native";
 
@@ -62,7 +63,12 @@ export default function Vehicle() {
                 ListEmptyComponent={(<Text>Nenhum registro</Text>)}
                 scrollEnabled
                 renderItem={({ item }) => (
-                    <TouchableOpacity className="flex gap-2 flex-row justify-between bg-white dark:bg-gray-900 p-4 space-y-1 mt-2 rounded-3xl m-2 shadow">
+                    <Link
+                        href={{
+                            pathname: '/vehicle/details/[id]',
+                            params: { id: item.id },
+                        }}
+                        className="flex gap-2 flex-row justify-between bg-white dark:bg-gray-900 p-4 space-y-1 mt-2 rounded-3xl m-2 shadow">
                         <View>
                             <Text className="text-black dark:text-white font-bold">{item.marca + " " + item.modelo}</Text>
                             <Text className="dark:text-white text-black">Placa: {item.placa}</Text>
@@ -77,7 +83,7 @@ export default function Vehicle() {
                             source={{ uri: item.imagem }}
                             resizeMode="cover"
                         />
-                    </TouchableOpacity>
+                    </Link>
                 )}
             />
         </View>
