@@ -6,13 +6,8 @@ interface ButtonProps extends TouchableOpacityProps {
 
 export default function Button({ title, ...rest }: ButtonProps) {
     return <TouchableOpacity
-        style={{
-            padding: 20,
-            backgroundColor: '#4CB752',
-            borderRadius: 15,
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginVertical: 5,
-            ...rest
-        }}><Text>{title}</Text></TouchableOpacity>
+        className="className='dark:text-zinc-800 py-6 my-2 bg-lime-500 rounded-2xl w-full"
+        {...rest}
+    ><Text className="dark:text-white text-center">{title}</Text>
+    </TouchableOpacity>
 }

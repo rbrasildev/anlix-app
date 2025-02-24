@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { View, Text, FlatList, RefreshControl, useColorScheme } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { StatusOnline } from "./StatusOnline";
+import StatusOnline from "./StatusOnline";
 import { useGlobalSearchParams } from "expo-router";
 import * as Animatable from 'react-native-animatable';
 
@@ -51,7 +51,7 @@ export default function Cto() {
     return (
         <View style={{ flex: 3, padding: 10 }}>
             <FlatList
-                style={{ padding: 5, gap:4 }}
+                style={{ padding: 5, gap: 4 }}
                 data={data}
                 refreshControl={
                     <RefreshControl

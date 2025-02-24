@@ -1,4 +1,5 @@
 import Input from "@/components/Input";
+import Loading from "@/components/Loading";
 import { Link } from "expo-router";
 import { useEffect, useState } from "react";
 import { View, Text, FlatList, Image, ActivityIndicator, TouchableOpacity } from "react-native";
@@ -43,15 +44,11 @@ export default function Vehicle() {
     );
 
     if (loading) {
-        return (
-            <View className="flex-1 items-center justify-center">
-                <ActivityIndicator size={32} color={'blue'} />
-            </View>
-        )
+        return <Loading />
     }
 
     return (
-        <View className="p-2">
+        <View className="p-4">
             <Input
                 value={search}
                 onChangeText={setSearch}
@@ -68,7 +65,7 @@ export default function Vehicle() {
                             pathname: '/vehicle/details/[id]',
                             params: { id: item.id },
                         }}
-                        className="flex gap-2 flex-row justify-between bg-white dark:bg-zinc-900 p-4 space-y-1 mt-2 rounded-3xl m-2 shadow">
+                        className="flex gap-2 flex-row justify-between bg-white dark:bg-zinc-900 p-4 space-y-2 rounded-3xl shadow mt-2 ">
                         <View>
                             <Text className="text-black dark:text-white font-bold">{item.marca + " " + item.modelo}</Text>
                             <Text className="dark:text-white text-black">Placa: {item.placa}</Text>

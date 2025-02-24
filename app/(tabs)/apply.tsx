@@ -144,7 +144,7 @@ export default function Apply() {
     return (
         <Animatable.View animation={'slideInLeft'} style={styles.container}>
             <KeyboardAvoidingView behavior="position" enabled>
-        
+
                 <Text className="font-light text-zinc-500 dark:text-slate-100 text-2xl">CPF/CNPJ</Text>
                 <Input
                     placeholderTextColor="#87949D"
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: '#4CB752',
-        padding:20,
+        padding: 20,
         borderRadius: 16,
         justifyContent: 'center',
         alignItems: 'center',

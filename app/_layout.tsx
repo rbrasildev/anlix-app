@@ -22,8 +22,7 @@ import { TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
 import { useAsyncStorage } from '@react-native-async-storage/async-storage';
-import "./styles/global.css"
-
+import "./styles/global.css";
 
 
 SplashScreen.preventAutoHideAsync();
@@ -35,10 +34,8 @@ export default function RootLayout() {
 
   async function anlixFetchData() {
     const response = await getItem();
-
     setAuth(JSON.parse(response));
   }
-
 
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
@@ -54,7 +51,7 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    anlixFetchData()
+    anlixFetchData();
     if (loaded) {
       SplashScreen.hideAsync();
     }
@@ -64,60 +61,53 @@ export default function RootLayout() {
     return null;
   }
 
-
-
   return (
-
-    <GestureHandlerRootView>
+    <GestureHandlerRootView className='flex-1 p-6'>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="Roteador" />
           <Stack.Screen name="Device" />
 
-          <Stack.Screen name="Cliente" options={() => ({
-            title: 'Buscar MAC (resetdefault)',
-            headerStyle: {
-              ...DarkTheme
-            },
-            headerRight: () => (
-              <TouchableOpacity
-                onPress={() => {
-                  console.error('Navigating to /Device');
-                  router.push('/Device'); // O caminho deve estar correto
-                }}
-              >
-                <MaterialIcons name="search" size={32} color="#87949D" />
-              </TouchableOpacity>
-            ),
-          })} />
-          <Stack.Screen name="CtoInfo"
+          <Stack.Screen
+            name="Cliente"
+            options={() => ({
+              title: 'Buscar MAC (resetdefault)',
+              headerRight: () => (
+                <TouchableOpacity
+                  onPress={() => {
+                    console.error('Navigating to /Device');
+                    router.push('/Device'); // O caminho deve estar correto
+                  }}
+                >
+                  <MaterialIcons name="search" size={32} color="#87949D" />
+                </TouchableOpacity>
+              ),
+            })}
+          />
+          <Stack.Screen
+            name="CtoInfo"
             options={{
               headerTitle: 'Informações da CTO',
               headerTintColor: '#666',
-
             }}
           />
-          <Stack.Screen name="settings"
+          <Stack.Screen
+            name="settings"
             options={{
               headerShown: false,
               gestureEnabled: false,
               headerBackVisible: false,
               headerTitle: 'Configurações de acesso',
               headerTintColor: '#666',
-
             }}
           />
-
-          <Stack.Screen name="vehicle/Details"
-            options={{
-              headerShown: true,
-              headerTitle: 'Informações da CTO',
-              headerTintColor: '#666',
-
-            }}
+          <Stack.Screen
+            name="vehicle/details/[id]"
+            options={({ route }) => ({
+              title: `Veículo ${route.params?.id ?? 'Desconhecido'}`,
+            })}
           />
-
         </Stack>
       </ThemeProvider>
       <Toast />

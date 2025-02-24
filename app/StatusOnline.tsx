@@ -8,7 +8,7 @@ interface StatusConnectionProps {
     isOnline: boolean;
 }
 
-export function StatusOnline({ isOnline }: StatusConnectionProps) {
+export default function StatusOnline({ isOnline }: StatusConnectionProps) {
     const [isOn, setIsOn] = useState(false)
     async function handleStatusConnection() {
         const auth = await config();

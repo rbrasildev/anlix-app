@@ -6,6 +6,7 @@ import config from "../config";
 import { router } from "expo-router";
 import getDeviceData from "../services/getDeviceData";
 import * as Animatable from 'react-native-animatable';
+import Button from "@/components/Button";
 
 
 interface DeviceProps {

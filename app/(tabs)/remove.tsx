@@ -8,6 +8,7 @@ import Toast from "react-native-toast-message";
 import config from "../config";
 import { auth } from "@/constants/Auth";
 import getDeviceData from "../services/getDeviceData";
+import Input from "@/components/Input";
 
 interface roteadorProps {
     _id: string;
@@ -111,16 +112,14 @@ export default function Remove() {
     }, []);
 
     return (
-        <View style={{ ...theme, backgroundColor: 'transparent', flex: 1, justifyContent: 'center' }}>
-            <TextInput
-                style={{ ...theme, padding: 15, fontSize: 18, marginHorizontal: 15, borderWidth: 1, borderRadius: 15, marginTop: 10, }}
+        <View className="p-4">
+            <Input
                 value={mac}
                 placeholderTextColor={'#87949D'}
                 onChangeText={handleInputChange}
                 placeholder='Digite o MAC'
                 keyboardType="ascii-capable"
-            >
-            </TextInput>
+            />
 
             {isLoading && <ActivityIndicator style={{ marginTop: '80%' }} size="large" color="#666" />}
             {resetdefaults == false && isLoading == false && mac != "" ? <Text style={{ color: "#fff", marginTop: '60%', textAlign: 'center' }}>Nenhum registro</Text> :
