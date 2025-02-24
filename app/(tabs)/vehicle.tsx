@@ -55,55 +55,69 @@ export default function Vehicle() {
         return vehicle.quilometragem >= calculateNextChange(vehicle);
     };
 
-    const VehicleCard = ({ item }: { item: VehicleProps }) => (
-        <Link
-            href={{
-                pathname: '/vehicle/details/[id]',
-                params: { id: item.id },
-            }}
-            className={`${isMaintenanceNeeded(item)
-                    ? "bg-red-500/90"
-                    : "bg-white dark:bg-zinc-900"
-                } p-6 rounded-3xl shadow-lg mt-4`}
-        >
-            <View className="flex-row justify-between items-start">
-                <View className="flex-1 mr-4">
-                    <Text className="text-xl font-bold mb-2 text-black dark:text-white">
-                        {item.marca} {item.modelo}
-                    </Text>
-                    <Text className="text-base mb-1 dark:text-white text-black">
-                        Placa: {item.placa}
-                    </Text>
+    const formatKM = (km: number): string => {
+        return km.toLocaleString('pt-BR') + ' km';
+    };
 
-                    <View className="mt-4 space-y-1">
-                        <InfoRow
-                            label="KM Atual"
-                            value={`${item.quilometragem}`}
-                        />
-                        <InfoRow
-                            label="Última troca"
-                            value={`${item.km_ultima_troca}`}
-                        />
-                        <InfoRow
-                            label="Próxima troca"
-                            value={`${calculateNextChange(item)}`}
-                        />
-                        <InfoRow
-                            label="Restante"
-                            value={`${calculateRemaining(item)}`}
-                            highlight={isMaintenanceNeeded(item)}
-                        />
+    const VehicleCard = ({ item }: { item: VehicleProps }) => {
+        const nextChange = calculateNextChange(item);
+        const remaining = calculateRemaining(item);
+        const isNeeded = isMaintenanceNeeded(item);
+        const threshold = item.tipo === "carro" ? 5000 : 1000;
+
+        return (
+            <Link
+                href={{
+                    pathname: '/vehicle/details/[id]',
+                    params: { id: item.id },
+                }}
+                className={`${isNeeded
+                        ? "bg-red-500/90"
+                        : "bg-white dark:bg-zinc-900"
+                    } p-6 rounded-3xl shadow-lg mt-4`}
+            >
+                <View className="flex-row justify-between items-center">
+                    <View className="flex-1 mr-4">
+                        <Text className="text-xl font-bold mb-2 text-black dark:text-white">
+                            {item.marca} {item.modelo}
+                        </Text>
+                        <Text className="text-base mb-1 dark:text-white text-black">
+                            Placa: {item.placa}
+                        </Text>
+
+                        <View className="mt-4 space-y-1">
+                            <InfoRow
+                                label="KM"
+                                value={formatKM(item.quilometragem)}
+                            />
+                            <InfoRow
+                                label="Última"
+                                value={formatKM(item.km_ultima_troca)}
+                            />
+                            <InfoRow
+                                label="Próxima"
+                                value={formatKM(nextChange)}
+                            />
+                            <InfoRow
+                                label="Restante"
+                                value={formatKM(remaining)}
+                                highlight={isNeeded}
+                                showProgress={true}
+                                current={remaining}
+                                total={threshold}
+                            />
+                        </View>
                     </View>
-                </View>
 
-                <Image
-                    className="w-40 h-32 rounded-2xl"
-                    source={{ uri: item.imagem }}
-                    resizeMode="cover"
-                />
-            </View>
-        </Link>
-    );
+                    <Image
+                        className="w-48 h-32 rounded-2xl"
+                        source={{ uri: item.imagem }}
+                        resizeMode="cover"
+                    />
+                </View>
+            </Link>
+        );
+    };
 
     if (loading) return <Loading />;
 
@@ -145,14 +159,14 @@ const InfoRow = ({
 }) => (
     <View className="flex-row justify-between">
         <Text className={`${highlight
-                ? "text-white font-bold"
-                : "text-zinc-700 dark:text-zinc-400"
+            ? "text-white font-bold"
+            : "text-zinc-700 dark:text-zinc-400"
             }`}>
             {label}:
         </Text>
         <Text className={`${highlight
-                ? "text-white font-bold"
-                : "text-zinc-700 dark:text-zinc-400"
+            ? "text-white font-bold"
+            : "text-zinc-700 dark:text-zinc-400"
             }`}>
             {value}
         </Text>
