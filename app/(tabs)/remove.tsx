@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FlatList } from "react-native";
-import { useColorScheme } from "react-native";
+
 import { Text, View, TouchableOpacity, ActivityIndicator, Alert, SafeAreaView, Clipboard, TextInput } from "react-native";
 import Toast from "react-native-toast-message";
 import config from "../config";
@@ -18,24 +18,6 @@ export default function Remove() {
     const [dataMac, setDataMac] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const [mac, setMac] = useState('');
-
-    const scheme = useColorScheme();
-    const lightTheme = {
-        backgroundColor: '#fff',
-        textColor: '#333',
-        color: '#141414',
-        borderColor: '#ccc',
-    };
-
-    const darkTheme = {
-        backgroundColor: '#121212',
-        textColor: '#fff',
-        color: '#ccc',
-        borderColor: '#333',
-    };
-
-    const theme = scheme === 'light' ? lightTheme : darkTheme;
-
 
     const callPostApi = async () => {
         setIsLoading(true)
@@ -121,67 +103,52 @@ export default function Remove() {
                 keyboardType="ascii-capable"
             />
 
-            {isLoading && <ActivityIndicator style={{ marginTop: '80%' }} size="large" color="#666" />}
-            {resetdefaults == false && isLoading == false && mac != "" ? <Text style={{ color: "#fff", marginTop: '60%', textAlign: 'center' }}>Nenhum registro</Text> :
+            {isLoading && <ActivityIndicator className="mt-[80%]" size="large" color="#666" />}
+
+            {resetdefaults == false && isLoading == false && mac != "" ? (
+                <Text className="text-white mt-[60%] text-center">Nenhum registro</Text>
+            ) : (
                 <FlatList
                     data={resetdefaults}
                     keyExtractor={(item) => item._id}
-                    renderItem={({ item, index }) =>
+                    renderItem={({ item }) => (
                         <TouchableOpacity
                             onLongPress={() => confirm()}
-                            style={{
-                                ...theme,
-                                marginTop: 15,
-                                alignItems: 'center',
-                                justifyContent: 'space-around',
-                                flexDirection: "row",
-                                padding: 5,
-                                marginHorizontal: 15,
-                                borderRadius: 15,
-                            }}>
-                            <View style={{
-                                ...theme,
-                                width: 60,
-                                height: 60,
-                                borderRadius: 30,
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}>
-
+                            className="mt-4 items-center justify-around flex-row p-1.5 rounded-2xl bg-white dark:bg-[#121212]"
+                        >
+                            <View className="w-[60px] h-[60px] rounded-full items-center justify-center bg-white dark:bg-[#121212]">
                                 <MaterialCommunityIcons
                                     name="router-wireless"
                                     size={24}
                                     color='#4CB752'
                                 />
-                                <Text style={{ ...theme, fontSize: 10, }}>{item.model}</Text>
-                                <Text style={{ ...theme, fontSize: 8 }}>{item.use_tr069 ? 'tr069' : 'firmware'}</Text>
+                                <Text className="text-[10px] text-[#333] dark:text-[#ccc]">{item.model}</Text>
+                                <Text className="text-[8px] text-[#333] dark:text-[#ccc]">
+                                    {item.use_tr069 ? 'tr069' : 'firmware'}
+                                </Text>
                             </View>
+
                             <View>
-                                <Text style={{ ...theme, fontSize: 20, }}>{item._id}</Text>
+                                <Text className="text-xl text-[#333] dark:text-[#ccc]">{item._id}</Text>
                             </View>
+
                             <TouchableOpacity
-                                style={{
-                                    padding: 4,
-                                    borderRadius: 4,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    marginLeft: 10
-                                }}
+                                className="p-1 rounded justify-center items-center ml-2.5"
                                 onPress={() => confirm()}
                             >
-                                <View style={{ ...theme, padding: 6, borderRadius: 4, }}>
-                                    <MaterialCommunityIcons
-                                        style={{ ...theme }}
-                                        name="trash-can"
-                                        size={24}
-                                    />
-                                </View>
+
+                                <MaterialCommunityIcons
+                                    className="text-[#333] dark:text-red-500]"
+                                    name="trash-can"
+                                    color="#ef4444"
+                                    size={24}
+                                />
+
                             </TouchableOpacity>
                         </TouchableOpacity>
-                    }
+                    )}
                 />
-            }
-
+            )}
         </View>
     );
 }

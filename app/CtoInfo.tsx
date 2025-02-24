@@ -1,35 +1,14 @@
 import { useEffect, useState } from "react";
-import { View, Text, FlatList, RefreshControl, useColorScheme } from "react-native";
+import { View, Text, FlatList, RefreshControl } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import StatusOnline from "./StatusOnline";
 import { useGlobalSearchParams } from "expo-router";
 import * as Animatable from 'react-native-animatable';
 
-
 export default function Cto() {
     const [data, setData] = useState()
     const [totalClientes, setTotalClientes] = useState(0);
     const { ctoIdent } = useGlobalSearchParams();
-
-    const scheme = useColorScheme();
-
-    const lightTheme = {
-        textColor: '#000',
-        borderColor: '#ddd',
-        color: '#333',
-        backgroundColor: '#f3f3f4',
-    };
-
-    const darkTheme = {
-        textColor: '#fff',
-        color: '#666',
-        borderColor: '#212121',
-        backgroundColor: '#141414'
-    };
-
-    const theme = scheme === 'light' ? lightTheme : darkTheme;
-
-
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = () => {
@@ -44,14 +23,15 @@ export default function Cto() {
         setData(data)
         setTotalClientes(data.length)
     }
+
     useEffect(() => {
         handleCto()
     }, [])
 
     return (
-        <View style={{ flex: 3, padding: 10 }}>
+        <View className="flex-1 p-2.5">
             <FlatList
-                style={{ padding: 5, gap: 4 }}
+                className="p-1.5"
                 data={data}
                 refreshControl={
                     <RefreshControl
@@ -67,16 +47,22 @@ export default function Cto() {
                             <MaterialCommunityIcons
                                 name="package"
                                 size={32}
-                                style={{ color: theme.color }}
+                                color={"#ccc"}
                             />
                             <Text className="font-bold text-gray-500 text-2xl">{ctoIdent}</Text>
                         </View>
-                        <View style={{ flexDirection: 'row', gap: 10 }}>
-                            <View style={{ alignItems: 'center', justifyContent: 'center', borderRadius: 20 }}>
-                                <Text className="font-bold text-zic-400 dark:text-gray-400"><MaterialCommunityIcons size={16} name="image-filter-frames" /> Ocupadas ({totalClientes})</Text>
+                        <View className="flex-row gap-2.5">
+                            <View className="items-center justify-center rounded-2xl">
+                                <Text className="font-bold text-zinc-400 dark:text-gray-400">
+                                    <MaterialCommunityIcons size={16} name="image-filter-frames" />
+                                    Ocupadas ({totalClientes})
+                                </Text>
                             </View>
-                            <View style={{ alignItems: 'center', justifyContent: 'center', borderRadius: 20 }}>
-                                <Text className="font-bold text-zic-400 dark:text-gray-400"><MaterialCommunityIcons size={16} name="image-filter-frames" /> Livres ({16 - totalClientes})</Text>
+                            <View className="items-center justify-center rounded-2xl">
+                                <Text className="font-bold text-zinc-400 dark:text-gray-400 gap-2">
+                                    <MaterialCommunityIcons size={16} name="image-filter-frames" />
+                                    Livres ({16 - totalClientes})
+                                </Text>
                             </View>
                         </View>
                     </View>
@@ -85,58 +71,41 @@ export default function Cto() {
                     <Animatable.View
                         animation={'fadeInUp'}
                         duration={300 * index}
-                        className="bg-zinc-50 dark:bg-zinc-950 rounded-2xl mb-2"
+                        className="bg-zinc-50 dark:bg-zinc-900 rounded-2xl mb-2"
                     >
                         <View className="p-4">
-                            <Text className="font-bold mb-2 text-zinc-800 dark:text-zinc-500">{item.nome}</Text>
-
-                            <Text style={{
-                                paddingLeft: 5,
-                                color: item.status == 3 ? '#E3371E' : item.status == 4 ? '#F2AE30' : '#666'
-                            }}>
-                                {`${item.login} - ${item.status == 3 ? 'Cancelado' : item.status == 4 ? 'Suspenso' : 'Ativo'}`}
+                            <Text className="font-bold mb-2 text-zinc-800 dark:text-zinc-500">
+                                {item.nome}
                             </Text>
-                            <View
-                                style={{
-                                    gap: 10,
-                                    marginVertical: 4,
-                                    borderRadius: 3,
-                                    padding: 5,
-                                    alignItems: 'flex-start',
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between'
-                                }}>
-                                <View
-                                    style={{
-                                        flexDirection: 'row',
-                                        gap: 10, alignItems: 'center'
-                                    }}>
-                                    <MaterialCommunityIcons style={{
-                                        color: theme.color
-                                    }}
+
+                            <Text className={`pl-1.5 ${item.status == 3
+                                    ? 'text-[#E3371E]'
+                                    : item.status == 4
+                                        ? 'text-[#F2AE30]'
+                                        : 'text-gray-600'
+                                }`}>
+                                {`${item.login} - ${item.status == 3
+                                        ? 'Cancelado'
+                                        : item.status == 4
+                                            ? 'Suspenso'
+                                            : 'Ativo'
+                                    }`}
+                            </Text>
+
+                            <View className="flex-row justify-between items-center gap-2.5 my-1 rounded p-1.5">
+                                <View className="flex-row items-center gap-2.5">
+                                    <MaterialCommunityIcons
+                                        color={"#ccc"}
                                         name="image-filter-frames"
                                         size={20}
                                     />
-                                    <Text
-                                        style={{
-                                            color: theme.color,
-                                            fontSize: 20,
-                                        }}>
+                                    <Text className="text-gray-500 dark:text-gray-400 text-xl">
                                         {item.splitter_port}
                                     </Text>
                                 </View>
-                                <View
-                                    style={{
-                                        flexDirection: 'row',
-                                        gap: 10,
-                                        alignItems: 'center',
 
-                                    }}>
-                                    <Text
-                                        style={{
-                                            fontSize: 16,
-                                            color: theme.color,
-                                        }}>
+                                <View className="flex-row items-center gap-2.5">
+                                    <Text className="text-gray-500 dark:text-gray-400 text-base">
                                         {item.wifi_ssid_5}
                                     </Text>
                                     <StatusOnline isOnline={item.login} />

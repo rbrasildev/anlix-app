@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text, View, TouchableOpacity, ActivityIndicator, Alert, useColorScheme, RefreshControl, FlatList } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import * as Clipboard from 'expo-clipboard';
 
 import getDeviceData from "../services/getDeviceData";
@@ -17,23 +16,6 @@ export default function Device() {
     const [dataMac, setDataMac] = useState<RoteadorProps[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false)
-
-    const scheme = useColorScheme();
-
-    const lightTheme = {
-        textColor: '#000',
-        color: '#141414',
-        backgroundColor: '#fff',
-        borderColor: '#ddd'
-    };
-
-    const darkTheme = {
-        textColor: '#ccc',
-        color: '#ccc',
-        borderColor: '#222',
-    };
-
-    const theme = scheme === 'light' ? lightTheme : darkTheme;
 
     const copyToClipboard = async (content: string) => {
         await Clipboard.setStringAsync(content);
@@ -68,65 +50,45 @@ export default function Device() {
     }
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center' }}>
+        <View className="flex-1 justify-center">
             <FlatList
                 data={resetdefaults}
                 keyExtractor={(item) => item._id}
-                renderItem={({ item, index }) =>
+                renderItem={({ item, index }) => (
                     <View
                         key={item._id}
-                        style={{
-                            ...theme,
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            flexDirection: "row",
-                            padding: 5,
-                            borderRadius: 10,
-                            marginHorizontal: 15,
-                            marginTop:10,
-                            borderWidth: 1,
-                        }}>
-                        <View style={{
-                            ...theme,
-                            width: 60, height: 60,
-                            borderRadius: 30,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            marginRight: 4,
-                        }}>
-
+                        className="flex-row items-center justify-between mt-2.5 rounded-2xl border border-gray-200 dark:border-gray-800"
+                    >
+                        <View className="w-[60px] h-[60px] rounded-full items-center justify-center mr-1">
                             <MaterialCommunityIcons
                                 name="router-wireless"
                                 size={24}
                                 color='#4CB752'
                             />
-                            <Text style={{ ...theme, fontSize: 10, }}>{item.model}</Text>
-                            <Text style={{ ...theme, fontSize: 8, }}>{item.use_tr069 ? 'tr069' : 'firmware'}</Text>
+                            <Text className="text-xs dark:text-gray-300">{item.model}</Text>
+                            <Text className="text-[8px] dark:text-gray-300">
+                                {item.use_tr069 ? 'tr069' : 'firmware'}
+                            </Text>
                         </View>
+                        
                         <View>
-                            <Text style={{ ...theme, fontSize: 20, }}>{item._id}</Text>
+                            <Text className="text-xl dark:text-gray-300">{item._id}</Text>
                         </View>
 
                         <TouchableOpacity
-                            style={{
-                                padding: 4,
-                                borderRadius: 4,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                marginRight: 10,
-                            }}
+                            className="p-1 rounded justify-center items-center mr-2.5"
                             onPress={() => copyToClipboard(resetdefaults[index]._id)}
                         >
                             <View>
                                 <MaterialCommunityIcons
-                                    style={{ ...theme }}
+                                    className="dark:text-gray-300"
                                     name="content-copy"
                                     size={24}
                                 />
                             </View>
                         </TouchableOpacity>
                     </View>
-                }
+                )}
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
@@ -136,12 +98,14 @@ export default function Device() {
                     />
                 }
                 ListEmptyComponent={
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <View className="flex-1 justify-center items-center">
                         {isLoading ? (
-                            <ActivityIndicator style={{ marginTop: 5 }} size="large" color="#fff" />
+                            <ActivityIndicator className="mt-1" size="large" color="#fff" />
                         ) : (
-                            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                                <Text style={{ ...theme, backgroundColor: 'transparent', marginTop: 250, fontSize: 18 }}>Nenhum registro</Text>
+                            <View className="flex-1 items-center justify-center">
+                                <Text className="mt-64 text-lg dark:text-gray-300">
+                                    Nenhum registro
+                                </Text>
                             </View>
                         )}
                     </View>
