@@ -77,7 +77,7 @@ export default function RootLayout() {
                 <TouchableOpacity
                   onPress={() => {
                     console.error('Navigating to /Device');
-                    router.push('/Device'); // O caminho deve estar correto
+                    router.push('/Device'); 
                   }}
                 >
                   <MaterialIcons name="search" size={32} color="#87949D" />
